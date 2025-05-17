@@ -1,6 +1,8 @@
 {
   "version": "2.0.0",
   "tasks": [
+    /*
+    Ctrl + Shift + p -> Case Runner: Run Test Case
     {
       "label": "Run Tests (prompt)",
       "type": "shell",
@@ -34,7 +36,7 @@
         "reveal": "always",
         "panel": "shared"
       }
-    },
+    },*/
     {
       "label": "Setup Problem (prompt)",
       "type": "shell",
