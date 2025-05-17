@@ -76,3 +76,59 @@ This will run `go build` on `problems/abc405/a.go`, then execute the binary with
 * Input and expected files must have matching filenames (e.g., `a1`).
 * The script loops over all test cases in the `in/` directory.
 * Failed diffs are saved to `diffs/<testcase>.diff`.
+
+---
+
+## 🔧 Customization
+
+You can extend or modify the script to support:
+
+* Filtering specific test cases
+* Running multiple problem sets (e.g., `abc405`, `abc406`, ...)
+* Enhanced diff output with context
+
+Feel free to adjust the script to your workflow!
+
+---
+
+## 🐞 Debugging in VS Code
+
+To debug a Go file from `problems/<dir>/<file>.go` interactively in VS Code:
+
+1. Create a `.vscode/launch.json` with the following:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Go (select problem)",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/problems/${input:dir}/${input:file}",
+      "args": [],
+      "cwd": "${workspaceFolder}/problems/${input:dir}",
+      "console": "integratedTerminal"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "dir",
+      "type": "promptString",
+      "description": "Enter problem directory (e.g. abc405)",
+      "default": "abc405"
+    },
+    {
+      "id": "file",
+      "type": "promptString",
+      "description": "Enter filename (e.g. a.go)",
+      "default": "a.go"
+    }
+  ]
+}
+```
+
+2. Open the Run & Debug tab, select "Debug Go (select problem)"
+3. Input the directory and file name when prompted
+4. Set breakpoints and start debugging 🚀
