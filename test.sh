@@ -16,8 +16,8 @@ dir="problems/$1"
 name="$2"
 src="$dir/$name.go"
 bin="$dir/$name.out"
-indir="$dir/in"
-expectdir="$dir/expect"
+indir="$dir/in/$name"
+expectdir="$dir/expect/$name"
 
 # diffs 保存用ディレクトリ
 mkdir -p diffs
