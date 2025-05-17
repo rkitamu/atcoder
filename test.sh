@@ -1,14 +1,23 @@
 #!/bin/bash
 
-# Usage check
-if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <contest_dir> <problem_letter>"
+# Usage: ./test.sh <contest> <problem> [--case case_name]
+if [ "$#" -lt 2 ]; then
+  echo "Usage: $0 <contest> <problem> [--case case_name]"
   echo "Example: $0 abc405 a"
+  echo "         $0 abc405 a --case a_case02"
   exit 1
 fi
 
 contest="$1"
 letter="$2"
+shift 2
+
+case_filter=""
+if [ "$1" == "--case" ]; then
+  case_filter="$2"
+  shift 2
+fi
+
 basedir="problems/$contest/$letter"
 src="$basedir/main.go"
 bin="$basedir/$letter.out"
@@ -17,7 +26,8 @@ expectdir="$basedir/expect"
 actualdir="$basedir/actual"
 diffdir="$basedir/diffs"
 
-mkdir -p "$actualdir" "$diffdir"
+mkdir -p "$actualdir"
+diffdir_created=0  # defer creation of diffs/
 
 # Build
 if ! go build -o "$bin" "$src"; then
@@ -27,10 +37,15 @@ fi
 
 # Enable nullglob
 shopt -s nullglob
-inputs=("$indir"/${letter}_case*.input.txt)
+inputs=()
+if [ -n "$case_filter" ]; then
+  inputs=("$indir/${case_filter}.input.txt")
+else
+  inputs=("$indir/${letter}_case"*.input.txt)
+fi
 shopt -u nullglob
 
-# No inputs found
+# No inputs
 if [ ${#inputs[@]} -eq 0 ]; then
   echo "No input files found in $indir"
   exit 1
@@ -54,6 +69,12 @@ for infile in "${inputs[@]}"; do
   else
     echo -e "$case_base: \033[0;31mFAIL\033[0m"
     ((fail++))
+
+    if [ "$diffdir_created" -eq 0 ]; then
+      mkdir -p "$diffdir"
+      diffdir_created=1
+    fi
+
     diff -u --color=always "$expect_file" "$actual_file"
     diff -u "$expect_file" "$actual_file" > "$diff_out"
   fi
