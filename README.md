@@ -4,6 +4,41 @@ This project provides a simple test automation workflow for Go-based competitive
 
 ---
 
+## ⚙️ Setup
+
+### 1. Install dependencies
+
+#### 📌 Required tools:
+
+* **Go** (≥ 1.20)
+* **Node.js** (recommended: LTS)
+* **npm**
+* **Python 3**
+* **pipx** (for Python package isolation)
+* **VS Code**
+
+#### 📦 Install `online-judge-tools`
+
+```bash
+pipx install online-judge-tools
+```
+
+Used by `setup.sh` to download sample test cases from AtCoder.
+
+#### 📦 Install `vsce` to build the VS Code extension
+
+```bash
+npm install -g @vscode/vsce
+```
+
+If you get build errors, you may need to install `libsecret-1-dev` (Linux):
+
+```bash
+sudo apt install libsecret-1-dev
+```
+
+---
+
 ## 📁 Directory Structure
 
 ```plaintext
@@ -106,14 +141,13 @@ The `case-runner` extension allows you to dynamically select contest/problem/cas
 ```bash
 cd case-runner
 npm install
-npm install -g @vscode/vsce
 vsce package
 ```
 
 Then in VS Code:
 
 ```bash
-Extensions → ... → Install from VSIX
+Extensions → ... → Install from VSIX → select `case-runner-*.vsix`
 ```
 
 ---
