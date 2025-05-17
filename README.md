@@ -1,69 +1,81 @@
 # Competitive Programming Test Runner
 
-This project provides a simple test automation script for Go-based competitive programming problems. It allows you to run test cases with sample inputs and compare the outputs against expected results using a unified diff format.
+This project provides a simple test automation workflow for Go-based competitive programming problems. It includes problem setup, test execution, and output comparison, all tailored to a structured problem directory layout.
 
 ---
 
 ## 📁 Directory Structure
 
-```
+```plaintext
 .
-├── problems/            # Root directory for all problem sets
-│   ├── abc405/
-│   │   ├── a.go         # Go source file to test
-│   │   ├── in/          # Input test cases
-│   │   │   ├── a1
+├── problems/                     # All contest problems live here
+│   ├── abc405/                   # Contest name
+│   │   ├── a/                    # Problem name (per letter)
+│   │   │   ├── main.go           # Problem source code
+│   │   │   ├── input/            # Input test cases
+│   │   │   │   ├── a_case01.input.txt
+│   │   │   │   └── ...
+│   │   │   ├── expect/           # Expected outputs
+│   │   │   │   ├── a_case01.expect.txt
+│   │   │   │   └── ...
+│   │   │   ├── actual/           # Actual outputs from latest test run
+│   │   │   │   ├── a_case01.actual.txt
+│   │   │   ├── diffs/            # Diffs if any test fails
+│   │   │   │   ├── a_case01.diff
 │   │   │   └── ...
-│   │   └── expect/      # Expected outputs
-│   │       ├── a1
-│   │       └── ...
-├── diffs/               # Generated unified diffs for failed cases
-│   ├── a1.diff
-│   └── ...
-├── test.sh              # Shell script to automate testing
-└── README.md            # This file
+│   │   └── ...
+│   └── template/                 # Template files for new problems
+│       └── x/
+│           ├── main.go
+│           ├── input/
+│           │   ├── x_case01.input.txt
+│           ├── expect/
+│           │   ├── x_case01.expect.txt
+├── test.sh                       # Run tests for a problem
+├── setup.sh                      # Create new problem from template
+├── clean.sh                      # Clean up test artifacts
+├── .gitignore                    # Ignore actual/ and diffs/
+└── README.md
 ```
 
 ---
 
 ## 🚀 How to Run Tests
 
-### 1. Prerequisites
-
-* Go must be installed.
-* For macOS users who want colored unified diff:
+### 1. Set up a problem
 
 ```bash
-brew install diffutils
-alias diff=gdiff
+./setup.sh abc405 a
 ```
 
-### 2. Usage
+This will copy `template/x/` to `problems/abc405/a/`, rename files to match `a_caseNN`, and place them in the proper folders.
 
-```bash
-./test.sh <directory> <problem>
-```
-
-#### Example:
+### 2. Run tests
 
 ```bash
 ./test.sh abc405 a
 ```
 
-This will run `go build` on `problems/abc405/a.go`, then execute the binary with each input from `in/` and compare with corresponding output from `expect/`.
+This builds `main.go`, runs each test input, compares against expected output, prints diffs, and saves them if mismatched.
+
+### 3. Clean up
+
+```bash
+./clean.sh
+```
+
+This removes all `*.out`, `actual/`, and `diffs/` directories under `problems/`.
 
 ---
 
 ## ✅ Test Output
 
-* `PASS`: Output matches expected.
-* `FAIL`: Output differs. A unified diff is printed and saved in the `diffs/` directory.
-
-### Diff Example:
+* **PASS**: Output matches expected
+* **FAIL**: Output differs → diff is shown and saved
 
 ```diff
---- expect/a1
-+++ tmp_a1
+--- expect/a_case01.expect.txt
++++ actual/a_case01.actual.txt
 @@ -1 +1 @@
 -expected output
 +actual output
@@ -71,64 +83,45 @@ This will run `go build` on `problems/abc405/a.go`, then execute the binary with
 
 ---
 
-## 💡 Notes
+## 🛠 VS Code Integration
 
-* Input and expected files must have matching filenames (e.g., `a1`).
-* The script loops over all test cases in the `in/` directory.
-* Failed diffs are saved to `diffs/<testcase>.diff`.
+### tasks.json
 
----
+You can run tasks from VS Code with argument prompts:
 
-## 🔧 Customization
+* **Run Tests (prompt)** → calls `test.sh` with user input
+* **Setup Problem (prompt)** → calls `setup.sh` with user input
+* **Clean All** → calls `clean.sh`
 
-You can extend or modify the script to support:
+### launch.json
 
-* Filtering specific test cases
-* Running multiple problem sets (e.g., `abc405`, `abc406`, ...)
-* Enhanced diff output with context
-
-Feel free to adjust the script to your workflow!
-
----
-
-## 🐞 Debugging in VS Code
-
-To debug a Go file from `problems/<dir>/<file>.go` interactively in VS Code:
-
-1. Create a `.vscode/launch.json` with the following:
+Debug any problem file by specifying:
 
 ```json
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Debug Go (select problem)",
-      "type": "go",
-      "request": "launch",
-      "mode": "auto",
-      "program": "${workspaceFolder}/problems/${input:dir}/${input:file}",
-      "args": [],
-      "cwd": "${workspaceFolder}/problems/${input:dir}",
-      "console": "integratedTerminal"
-    }
-  ],
-  "inputs": [
-    {
-      "id": "dir",
-      "type": "promptString",
-      "description": "Enter problem directory (e.g. abc405)",
-      "default": "abc405"
-    },
-    {
-      "id": "file",
-      "type": "promptString",
-      "description": "Enter filename (e.g. a.go)",
-      "default": "a.go"
-    }
-  ]
+  "name": "Debug Go (prompt)",
+  "type": "go",
+  "request": "launch",
+  "program": "${workspaceFolder}/problems/${input:contest}/${input:problem}/main.go"
 }
 ```
 
-2. Open the Run & Debug tab, select "Debug Go (select problem)"
-3. Input the directory and file name when prompted
-4. Set breakpoints and start debugging 🚀
+---
+
+## 🧼 .gitignore
+
+```gitignore
+**/actual/
+**/diffs/
+*.out
+```
+
+---
+
+## 💡 Notes
+
+* File names must follow: `a_case01.input.txt`, `a_case01.expect.txt`
+* Template files are located in `problems/template/x/`
+* Everything is problem-isolated: no cross-contest conflicts
+
+Feel free to extend with case descriptions, metadata, or CI integration!
