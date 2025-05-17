@@ -18,6 +18,24 @@
       }
     },
     {
+      "label": "Run Single Case (pick)",
+      "type": "shell",
+      "command": "./test.sh",
+      "args": [
+        "${input:contest}",
+        "${input:problem}",
+        "--case",
+        "${input:case}"
+      ],
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
       "label": "Setup Problem (prompt)",
       "type": "shell",
       "command": "./setup.sh",
@@ -56,6 +74,17 @@
       "id": "problem",
       "type": "promptString",
       "description": "Enter problem letter (e.g. a, b, c)"
+    },
+    {
+      "id": "case",
+      "type": "pickString",
+      "description": "Select a test case",
+      "options": [
+        "a_case01",
+        "a_case02",
+        "a_case03",
+        "a_case04"
+      ]
     }
   ]
 }
