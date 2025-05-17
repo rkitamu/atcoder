@@ -13,6 +13,7 @@ Thumbs.db
 
 # VS Code extension build artifacts
 case-runner/out/
+case-runner/dist/*
 case-runner/node_modules/
 case-runner/*.vsix
 
