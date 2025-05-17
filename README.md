@@ -1,40 +1,37 @@
 # Competitive Programming Test Runner
 
-This project provides a simple test automation workflow for Go-based competitive programming problems. It includes problem setup, test execution, and output comparison, all tailored to a structured problem directory layout.
+This project provides a simple test automation workflow for Go-based competitive programming problems. It includes problem setup, test execution, and output comparison, all tailored to a structured problem directory layout. A custom VS Code extension `case-runner` enhances the workflow with dynamic UI selection.
 
 ---
 
 ## 📁 Directory Structure
 
 ```plaintext
-.
-├── problems/                     # All contest problems live here
-│   ├── abc405/                   # Contest name
-│   │   ├── a/                    # Problem name (per letter)
-│   │   │   ├── main.go           # Problem source code
-│   │   │   ├── input/            # Input test cases
+atcoder/
+├── case-runner/               # VS Code extension (optional)
+│   ├── src/extension.ts       # Extension source
+│   └── ...
+├── problems/                 # All contest problems live here
+│   ├── abc405/
+│   │   ├── a/
+│   │   │   ├── main.go
+│   │   │   ├── input/
 │   │   │   │   ├── a_case01.input.txt
-│   │   │   │   └── ...
-│   │   │   ├── expect/           # Expected outputs
+│   │   │   ├── expect/
 │   │   │   │   ├── a_case01.expect.txt
-│   │   │   │   └── ...
-│   │   │   ├── actual/           # Actual outputs from latest test run
-│   │   │   │   ├── a_case01.actual.txt
-│   │   │   ├── diffs/            # Diffs if any test fails
-│   │   │   │   ├── a_case01.diff
-│   │   │   └── ...
-│   │   └── ...
-│   └── template/                 # Template files for new problems
+│   │   │   ├── actual/       # Output by test.sh
+│   │   │   ├── diffs/        # Diff files if mismatched
+│   │   ├── b/
+│   │   │   ├── ...
+│   └── template/             # Template files for new problems
 │       └── x/
 │           ├── main.go
 │           ├── input/
-│           │   ├── x_case01.input.txt
-│           ├── expect/
-│           │   ├── x_case01.expect.txt
-├── test.sh                       # Run tests for a problem
-├── setup.sh                      # Create new problem from template
-├── clean.sh                      # Clean up test artifacts
-├── .gitignore                    # Ignore actual/ and diffs/
+│           └── expect/
+├── test.sh                   # Run tests
+├── setup.sh                  # Create new problem and download samples
+├── clean.sh                  # Clean up output and diff artifacts
+├── .gitignore
 └── README.md
 ```
 
@@ -48,15 +45,27 @@ This project provides a simple test automation workflow for Go-based competitive
 ./setup.sh abc405 a
 ```
 
-This will copy `template/x/` to `problems/abc405/a/`, rename files to match `a_caseNN`, and place them in the proper folders.
+Copies `template/x/` to `problems/abc405/a/`, renames test cases, and optionally downloads official sample inputs/outputs via `oj`.
 
-### 2. Run tests
+### 2. Run tests (via extension)
+
+Use the VS Code command palette:
 
 ```bash
-./test.sh abc405 a
+Cmd+Shift+P → Case Runner: Run Test Case
 ```
 
-This builds `main.go`, runs each test input, compares against expected output, prints diffs, and saves them if mismatched.
+Pick:
+
+* contest (e.g. abc405)
+* problem (e.g. a)
+* case (e.g. a\_case02)
+
+Or run all cases:
+
+```bash
+Cmd+Shift+P → Case Runner: Run All Cases
+```
 
 ### 3. Clean up
 
@@ -64,7 +73,7 @@ This builds `main.go`, runs each test input, compares against expected output, p
 ./clean.sh
 ```
 
-This removes all `*.out`, `actual/`, and `diffs/` directories under `problems/`.
+Removes all `.out`, `actual/`, and `diffs/` directories.
 
 ---
 
@@ -83,45 +92,37 @@ This removes all `*.out`, `actual/`, and `diffs/` directories under `problems/`.
 
 ---
 
-## 🛠 VS Code Integration
+## 🛠 VS Code Extension: Case Runner
 
-### tasks.json
+The `case-runner` extension allows you to dynamically select contest/problem/case via QuickPick UI and runs `test.sh` with arguments.
 
-You can run tasks from VS Code with argument prompts:
+### Commands:
 
-* **Run Tests (prompt)** → calls `test.sh` with user input
-* **Setup Problem (prompt)** → calls `setup.sh` with user input
-* **Clean All** → calls `clean.sh`
+* `Case Runner: Run Test Case` – run a single case interactively
+* `Case Runner: Run All Cases` – run all tests for selected problem
 
-### launch.json
+### Build & Install (VSIX)
 
-Debug any problem file by specifying:
-
-```json
-{
-  "name": "Debug Go (prompt)",
-  "type": "go",
-  "request": "launch",
-  "program": "${workspaceFolder}/problems/${input:contest}/${input:problem}/main.go"
-}
+```bash
+cd case-runner
+npm install
+npm install -g @vscode/vsce
+vsce package
 ```
 
----
+Then in VS Code:
 
-## 🧼 .gitignore
-
-```gitignore
-**/actual/
-**/diffs/
-*.out
+```bash
+Extensions → ... → Install from VSIX
 ```
 
 ---
 
 ## 💡 Notes
 
-* File names must follow: `a_case01.input.txt`, `a_case01.expect.txt`
-* Template files are located in `problems/template/x/`
-* Everything is problem-isolated: no cross-contest conflicts
+* File names follow `a_case01.input.txt` and `a_case01.expect.txt`
+* `case-runner` extension eliminates the need for `tasks.json`
+* Samples can be fetched from AtCoder using `oj` during setup
+* Clean workflow with everything under one repo for Go competitive programming
 
-Feel free to extend with case descriptions, metadata, or CI integration!
+Feel free to customize for other languages or workflows!
