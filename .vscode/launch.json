@@ -2,28 +2,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Go (select problem)",
+      "name": "Debug Go (prompt)",
       "type": "go",
       "request": "launch",
-      "mode": "auto",
-      "program": "${workspaceFolder}/problems/${input:dir}/${input:file}",
-      "args": [],
-      "cwd": "${workspaceFolder}/problems/${input:dir}",
-      "console": "integratedTerminal"
+      "program": "${workspaceFolder}/problems/${input:contest}/${input:problem}/main.go"
     }
   ],
   "inputs": [
     {
-      "id": "dir",
+      "id": "contest",
       "type": "promptString",
-      "description": "Enter problem directory (e.g. abc405)",
-      "default": "abc405"
+      "description": "Enter contest directory (e.g. abc405)"
     },
     {
-      "id": "file",
+      "id": "problem",
       "type": "promptString",
-      "description": "Enter filename (e.g. a.go)",
-      "default": "a.go"
+      "description": "Enter problem letter (e.g. a, b, c)"
     }
   ]
 }

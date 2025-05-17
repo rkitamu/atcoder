@@ -2,37 +2,60 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Run Tests (interactive)",
+      "label": "Run Tests (prompt)",
       "type": "shell",
       "command": "./test.sh",
       "args": [
-        "${input:dir}",
+        "${input:contest}",
         "${input:problem}"
       ],
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      },
+      "group": "test",
+      "problemMatcher": [],
       "presentation": {
         "echo": true,
         "reveal": "always",
         "panel": "shared"
-      },
-      "problemMatcher": []
+      }
+    },
+    {
+      "label": "Setup Problem (prompt)",
+      "type": "shell",
+      "command": "./setup.sh",
+      "args": [
+        "${input:contest}",
+        "${input:problem}"
+      ],
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Clean All",
+      "type": "shell",
+      "command": "./clean.sh",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "panel": "shared"
+      }
     }
   ],
   "inputs": [
     {
-      "id": "dir",
+      "id": "contest",
       "type": "promptString",
-      "description": "Enter problem directory under 'problems/' (e.g. abc405)",
-      "default": "abc405"
+      "description": "Enter contest directory (e.g. abc405)"
     },
     {
       "id": "problem",
       "type": "promptString",
-      "description": "Enter problem file name (e.g. a)",
-      "default": "a"
+      "description": "Enter problem letter (e.g. a, b, c)"
     }
   ]
 }
