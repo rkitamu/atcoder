@@ -21,6 +21,12 @@ func main() {
 	out(n) // output result
 }
 
+
+// =====================
+// Portions of this file are based on code from:
+// https://github.com/gosagawa/atcoder
+// Copyright (c) gosagawa
+// Licensed under the MIT License
 // =====================
 // utils
 // =====================

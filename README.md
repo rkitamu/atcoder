@@ -190,3 +190,10 @@ Extensions → ... → Install from VSIX → select `case-runner-*.vsix`
 * Clean workflow with everything under one repo for Go competitive programming
 
 Feel free to customize for other languages or workflows!
+
+## License
+
+This project is licensed under the MIT License.
+
+It includes code from [gosagawa/atcoder](https://github.com/gosagawa/atcoder),
+which is also licensed under the MIT License.
