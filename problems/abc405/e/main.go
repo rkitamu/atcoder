@@ -11,23 +11,27 @@ import (
 func init() {
 	sc.Buffer([]byte{}, math.MaxInt64)
 	sc.Split(bufio.ScanWords)
+	// if use Combination
 	initCombTable()
 }
 
+const MAX_COMB_CACHE = 10000000
+const MOD = 998244353
+
 func main() {
 	defer flush()
-	in := nis(4)
+		in := nis(4)
 	a := in[0]
 	b := in[1]
 	c := in[2]
 	d := in[3]
 	ans := 0
 	for i := 0; i <= b; i++ {
-		ai := comb(a-1+i, i)
-		bdc := comb((b-i+d)+c, c)
-		ans += ai * bdc % INV
+		ai := combMod(a-1+i, i)
+		bdc := combMod((b-i+d)+c, c)
+		ans += ai * bdc % MOD
 	}
-	out(ans % INV)
+	out(ans % MOD)
 }
 
 // =====================
@@ -148,8 +152,6 @@ func outr2d(a [][]rune) {
 // =====================
 // calculation utils
 // =====================
-const MAX_COMB_CACHE = 10000000
-
 var fact, invFact []int
 
 // combination calculates nCk
@@ -158,31 +160,29 @@ func initCombTable() {
 	invFact = make([]int, MAX_COMB_CACHE+1)
 	fact[0] = 1
 	for i := 1; i <= MAX_COMB_CACHE; i++ {
-		fact[i] = fact[i-1] * i % INV
+		fact[i] = fact[i-1] * i % MOD
 	}
-	invFact[MAX_COMB_CACHE] = powMod(fact[MAX_COMB_CACHE], INV-2)
+	invFact[MAX_COMB_CACHE] = powMod(fact[MAX_COMB_CACHE], MOD-2)
 	for i := MAX_COMB_CACHE - 1; i >= 0; i-- {
-		invFact[i] = invFact[i+1] * (i + 1) % INV
+		invFact[i] = invFact[i+1] * (i + 1) % MOD
 	}
 }
 
-func comb(n, k int) int {
+// comb calculates nCk
+func combMod(n, k int) int {
 	if n < 0 || k < 0 || k > n {
 		return 0
 	}
-	return fact[n] * invFact[k] % INV * invFact[n-k] % INV
+	return (fact[n] * invFact[k] % MOD * invFact[n-k] % MOD) % MOD
 }
-
-// inverse element
-const INV = 998244353
 
 func powMod(x, e int) int {
 	res := 1
 	for e > 0 {
 		if e%2 == 1 {
-			res = res * x % INV
+			res = res * x % MOD
 		}
-		x = x * x % INV
+		x = x * x % MOD
 		e /= 2
 	}
 	return res
