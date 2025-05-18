@@ -1,10 +1,40 @@
-# Competitive Programming Test Runner
+# AtCoder workspace
 
-This project provides a simple test automation workflow for Go-based competitive programming problems. It includes problem setup, test execution, and output comparison, all tailored to a structured problem directory layout. A custom VS Code extension `case-runner` enhances the workflow with dynamic UI selection.
+This project provides a simple test automation workflow for Go-based AtCoder workspace. It includes problem setup, test execution, and output comparison, all tailored to a structured problem directory layout. A custom VS Code extension `case-runner` enhances the workflow with dynamic UI selection.
 
 ---
 
 ## ⚙️ Setup
+
+### 🛣️ Use with VS Code DevContainer (Optional)
+
+To get started instantly with a preconfigured environment using [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), follow these steps:
+
+#### 1. Launch in DevContainer
+
+Open this project in VS Code and run:
+
+```bash
+Cmd+Shift+P → Dev Containers: Reopen in Container
+```
+
+This will build a container with:
+
+* Go 1.20.6
+* pipx + `online-judge-tools`
+* `gopls` (Go language server)
+* Pre-installed VS Code extensions for Go and testing
+* Task to install `.vsix` extensions manually
+
+#### 2. Install case-runner.vsix
+
+Run the following VS Code task:
+
+```bash
+Cmd+Shift+P → Tasks: Run Task → Install VSIX Extensions
+```
+
+This will install `case-runner` from local `.vsix`.
 
 ### 1. Install dependencies
 
@@ -56,10 +86,10 @@ atcoder/
 │   │   │   │   ├── a_case01.expect.txt
 │   │   │   ├── actual/       # Output by test.sh
 │   │   │   ├── diffs/        # Diff files if mismatched
-│   │   ├── b/
-│   │   │   ├── ...
+│   ├── b/
+│   │   ├── ...
 │   └── template/             # Template files for new problems
-│       └── x/
+│       ├── x/
 │           ├── main.go
 │           ├── input/
 │           └── expect/
