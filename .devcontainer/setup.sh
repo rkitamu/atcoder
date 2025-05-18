@@ -8,6 +8,9 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> $HOME/.bashrc
 echo "[setup.sh] Installing gopls..."
 go install golang.org/x/tools/gopls@v0.15.3
 
+echo "[setup.sh] Installing dlv (Delve debugger)..."
+go install github.com/go-delve/delve/cmd/dlv@v1.22.1
+
 echo "[setup.sh] Installing python3-venv (if missing)..."
 apt-get update
 apt-get install -y python3-venv

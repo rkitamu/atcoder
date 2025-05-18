@@ -5,7 +5,8 @@
       "name": "Debug Go (prompt)",
       "type": "go",
       "request": "launch",
-      "program": "${workspaceFolder}/problems/${input:contest}/${input:problem}/main.go"
+      "program": "${workspaceFolder}/problems/${input:contest}/${input:problem}/main.go",
+      "console": "integratedTerminal"
     }
   ],
   "inputs": [
