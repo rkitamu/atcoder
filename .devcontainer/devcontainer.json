@@ -1,0 +1,17 @@
+{
+  "name": "Go 1.20.6",
+  "image": "golang:1.20.6",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "formulahendry.code-runner",
+        "usernamehw.errorlens",
+        "vscode-icons-team.vscode-icons"
+      ]
+    }
+  },
+  "workspaceFolder": "/workspaces/atcoder",
+  "postCreateCommand": "./.devcontainer/setup.sh"
+}

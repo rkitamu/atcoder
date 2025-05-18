@@ -27,6 +27,9 @@ cp "$template_dir/main.go" "$main_target"
 python3 - "$contest" "$letter" "$url" <<'EOF'
 import os, sys, subprocess, glob, shutil
 
+# for devcontainer
+os.environ["PATH"] = os.path.expanduser("~/.local/bin") + ":" + os.environ["PATH"]
+
 contest = sys.argv[1]
 problem = sys.argv[2]
 url = sys.argv[3]

@@ -64,6 +64,16 @@
         "reveal": "always",
         "panel": "shared"
       }
+    },
+    {
+      "label": "Install VSIX Extensions",
+      "type": "shell",
+      "command": "./.devcontainer/after-build-setup.sh",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      }
     }
   ],
   "inputs": [
