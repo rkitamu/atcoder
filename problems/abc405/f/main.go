@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
 )
 
@@ -18,8 +19,44 @@ func init() {
 const MAX_COMB_CACHE = 10000000
 const MOD = 1000000007
 
+
+
 func main() {
 	defer flush()
+
+	nm := nis(2)
+	n, m := nm[0], nm[1]
+
+	type Segment struct {
+		l, r int
+	}
+	seg := make([]Segment, m)
+	for i := 0; i < m; i++ {
+		lr := nis(2)
+		seg[i] = Segment{l: lr[0], r: lr[1]}
+	}
+	sort.Slice(seg, func(i, j int) bool { return seg[i].l < seg[j].l })
+
+	q := ni()
+	query := make([]*Segment, q)
+	for i := range query {
+		lr := nis(2)
+		query[i] = &Segment{l: lr[0], r: lr[1]}
+	}
+	sort.Slice(query, func(i, j int) bool { return query[i].l < query[j].l })
+
+	bit := NewBIT(2*n)
+	res := make([]int, q)
+
+	si := 0
+	for _, q := range query {
+		for si < m && seg[si].l <= q.l {
+			bit.Add(seg[si].l, 1)
+			si++
+		}
+		res[1] = bit.Sum(q.r) - bit.Sum(q.l-1)
+	}
+	
 }
 
 // =====================
@@ -172,6 +209,36 @@ func powMod(x, e int) int {
 		}
 		x = x * x % MOD
 		e /= 2
+	}
+	return res
+}
+
+// ======================
+// data structure
+// ======================
+type BIT struct {
+	n int
+	bit []int
+}
+
+func NewBIT(n int) *BIT {
+	return &BIT{n: n + 2, bit: make([]int, n+3)}
+}
+
+func (b *BIT) Add(i, x int) {
+	i++
+	for i < len(b.bit) {
+		b.bit[i] += x
+		i += i & -i
+	}
+}
+
+func (b *BIT) Sum(i int) int {
+	i++
+	res := 0
+	for i > 0 {
+		res += b.bit[i]
+		i -= i & -i
 	}
 	return res
 }
