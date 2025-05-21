@@ -342,3 +342,28 @@ func lcms(a ...int) int {
 	}
 	return l
 }
+
+var factorialCache = make([]int64, 0)
+func factorial(n  int) int64 {
+	if n < 0 {
+		panic("factorial: n must be non-negative")
+	}
+	if len(factorialCache) > n {
+		return factorialCache[n]
+	}
+	for i := len(factorialCache); i <= n; i++ {
+		if i == 0 {
+			factorialCache = append(factorialCache, 1)
+		} else {
+			factorialCache = append(factorialCache, factorialCache[i-1]*int64(i))
+		}
+	}
+	return factorialCache[n]
+}
+
+func comb(n, k int) int64 {
+	if n < 0 || k < 0 || k > n {
+		return 0
+	}
+	return factorial(n) / (factorial(k) * factorial(n-k))
+}
