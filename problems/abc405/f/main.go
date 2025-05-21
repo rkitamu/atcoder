@@ -70,8 +70,8 @@ func main() {
 
 	// 円周上の奇数の点がどの領域に属するかを求める
 	pointRegion := make([]int, 2*n+2)
-	var st Stack[Frame]
-	st.Push(Frame{r: 2*n + 1, region: 0})
+	st := NewStack[Frame]()
+	st.Push(Frame{r: 2*n + 2, region: 0})
 	cur := 0
 	for i := 2; i <= 2*n+1; i++ {
 		for cur < m && seg[cur].l == i {
@@ -130,7 +130,7 @@ func main() {
 	}
 
 	for i := 0; i < q; i++ {
-		c, d := ni(), ni()
+		c, d := query[i].l, query[i].r
 		u, v := pointRegion[c], pointRegion[d]
 		ancestor := lca(u, v)
 		out(depth[u] + depth[v] - 2*depth[ancestor])
