@@ -19,8 +19,6 @@ func init() {
 const MAX_COMB_CACHE = 10000000
 const MOD = 1000000007
 
-
-
 func main() {
 	defer flush()
 
@@ -35,7 +33,12 @@ func main() {
 		lr := nis(2)
 		seg[i] = Segment{l: lr[0], r: lr[1]}
 	}
-	sort.Slice(seg, func(i, j int) bool { return seg[i].l < seg[j].l })
+	sort.Slice(seg, func(i, j int) bool {
+		if seg[i].l == seg[j].l {
+			return seg[i].r < seg[j].r
+		}
+		return seg[i].l < seg[j].l
+	})
 
 	q := ni()
 	query := make([]*Segment, q)
@@ -43,20 +46,95 @@ func main() {
 		lr := nis(2)
 		query[i] = &Segment{l: lr[0], r: lr[1]}
 	}
-	sort.Slice(query, func(i, j int) bool { return query[i].l < query[j].l })
 
-	bit := NewBIT(2*n)
-	res := make([]int, q)
-
-	si := 0
-	for _, q := range query {
-		for si < m && seg[si].l <= q.l {
-			bit.Add(seg[si].l, 1)
-			si++
-		}
-		res[1] = bit.Sum(q.r) - bit.Sum(q.l-1)
+	// 線分Mを辺、別れた領域をノードとする木を作る
+	tree := make([][]int, m+1)
+	type Frame struct {
+		r      int
+		region int
 	}
-	
+	stack := NewStack[Frame]()
+	stack.Push(Frame{r: 2*n + 1, region: 0}) // 番兵
+	region := 1
+	for i := 0; i < m; i++ {
+		_, r := seg[i].l, seg[i].r
+		for stack.Top().r < r {
+			stack.Pop()
+		}
+		par := stack.Top().region
+		tree[par] = append(tree[par], region)
+		tree[region] = append(tree[region], par)
+		stack.Push(Frame{r: r, region: region})
+		region++
+	}
+
+	// 円周上の奇数の点がどの領域に属するかを求める
+	pointRegion := make([]int, 2*n+2)
+	var st Stack[Frame]
+	st.Push(Frame{r: 2*n + 1, region: 0})
+	cur := 0
+	for i := 2; i <= 2*n+1; i++ {
+		for cur < m && seg[cur].l == i {
+			st.Push(Frame{r: seg[cur].r, region: cur + 1})
+			cur++
+		}
+		for st.Top().r <= i {
+			st.Pop()
+		}
+		if i%2 == 1 {
+			pointRegion[i] = st.Top().region
+		}
+	}
+
+	// LCA 用の前処理
+	const LOG = 21
+	up := make([][]int, m+1)
+	for i := range up {
+		up[i] = make([]int, LOG)
+	}
+	depth := make([]int, m+1)
+	var dfs func(v, p int)
+	dfs = func(v, p int) {
+		up[v][0] = p
+		for i := 1; i < LOG; i++ {
+			up[v][i] = up[up[v][i-1]][i-1]
+		}
+		for _, u := range tree[v] {
+			if u != p {
+				depth[u] = depth[v] + 1
+				dfs(u, v)
+			}
+		}
+	}
+	dfs(0, 0)
+
+	lca := func(u, v int) int {
+		if depth[u] < depth[v] {
+			u, v = v, u
+		}
+		for i := LOG - 1; i >= 0; i-- {
+			if depth[u]-(1<<i) >= depth[v] {
+				u = up[u][i]
+			}
+		}
+		if u == v {
+			return u
+		}
+		for i := LOG - 1; i >= 0; i-- {
+			if up[u][i] != up[v][i] {
+				u = up[u][i]
+				v = up[v][i]
+			}
+		}
+		return up[u][0]
+	}
+
+	for i := 0; i < q; i++ {
+		c, d := ni(), ni()
+		u, v := pointRegion[c], pointRegion[d]
+		ancestor := lca(u, v)
+		out(depth[u] + depth[v] - 2*depth[ancestor])
+	}
 }
 
 // =====================
@@ -217,7 +295,7 @@ func powMod(x, e int) int {
 // data structure
 // ======================
 type BIT struct {
-	n int
+	n   int
 	bit []int
 }
 
@@ -241,4 +319,36 @@ func (b *BIT) Sum(i int) int {
 		i -= i & -i
 	}
 	return res
+}
+
+// Stack is a simple stack implementation
+type Stack[T any] struct {
+	data []T
+}
+
+func NewStack[T any]() *Stack[T] {
+	return &Stack[T]{data: make([]T, 0)}
+}
+
+func (s *Stack[T]) Push(v T) {
+	s.data = append(s.data, v)
+}
+
+func (s *Stack[T]) Pop() T {
+	last := len(s.data) - 1
+	v := s.data[last]
+	s.data = s.data[:last]
+	return v
+}
+
+func (s *Stack[T]) Empty() bool {
+	return len(s.data) == 0
+}
+
+func (s *Stack[T]) Len() int {
+	return len(s.data)
+}
+
+func (s *Stack[T]) Top() T {
+	return s.data[len(s.data)-1]
 }
