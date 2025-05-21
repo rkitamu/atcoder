@@ -53,7 +53,7 @@ func main() {
 		r      int
 		region int
 	}
-	stack := NewStack[Frame]()
+	stack := NewStack[Frame](2*n + 1)
 	stack.Push(Frame{r: 2*n + 1, region: 0}) // 番兵
 	region := 1
 	for i := 0; i < m; i++ {
@@ -70,7 +70,7 @@ func main() {
 
 	// 円周上の奇数の点がどの領域に属するかを求める
 	pointRegion := make([]int, 2*n+2)
-	st := NewStack[Frame]()
+	st := NewStack[Frame](2*n + 2)
 	st.Push(Frame{r: 2*n + 2, region: 0})
 	cur := 0
 	for i := 2; i <= 2*n+1; i++ {
@@ -294,6 +294,7 @@ func powMod(x, e int) int {
 // ======================
 // data structure
 // ======================
+// BIT is a Binary Indexed Tree (Fenwick Tree) implementation
 type BIT struct {
 	n   int
 	bit []int
@@ -326,8 +327,8 @@ type Stack[T any] struct {
 	data []T
 }
 
-func NewStack[T any]() *Stack[T] {
-	return &Stack[T]{data: make([]T, 0)}
+func NewStack[T any](size int) *Stack[T] {
+	return &Stack[T]{data: make([]T, size)}
 }
 
 func (s *Stack[T]) Push(v T) {
@@ -351,4 +352,44 @@ func (s *Stack[T]) Len() int {
 
 func (s *Stack[T]) Top() T {
 	return s.data[len(s.data)-1]
+}
+
+// Queue is a simple queue implementation
+type Queue[T any] struct {
+	data []T
+	head int
+	tail int
+}
+
+func NewQueue[T any](size int) *Queue[T] {
+	return &Queue[T]{data: make([]T, size), head: 0, tail: 0}
+}
+func (q *Queue[T]) Enqueue(v T) {
+	q.data = append(q.data, v)
+	q.tail++
+}
+func (q *Queue[T]) Dequeue() T {
+	if q.head == q.tail {
+		panic("queue is empty")
+	}
+	v := q.data[q.head]
+	q.head++
+	if q.head == len(q.data)/2 {
+		q.data = q.data[q.head:]
+		q.tail -= q.head
+		q.head = 0
+	}
+	return v
+}
+func (q *Queue[T]) Empty() bool {
+	return q.head == q.tail
+}
+func (q *Queue[T]) Len() int {
+	return q.tail - q.head
+}
+func (q *Queue[T]) Top() T {
+	if q.head == q.tail {
+		panic("queue is empty")
+	}
+	return q.data[q.head]
 }

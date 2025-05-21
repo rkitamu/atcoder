@@ -11,22 +11,17 @@ import (
 func init() {
 	sc.Buffer([]byte{}, math.MaxInt64)
 	sc.Split(bufio.ScanWords)
-	// if use Combination
-	// initCombTable()
+	if ifUseCombination { initCombTable() }
 }
 
 const MAX_COMB_CACHE = 10000000
 const MOD = 1000000007
+const ifUseCombination = false
 
 func main() {
 	defer flush()
 }
 
-// =====================
-// Portions of this file are based on code from:
-// https://github.com/gosagawa/atcoder
-// Copyright (c) gosagawa
-// Licensed under the MIT License
 // =====================
 // utils
 // =====================
@@ -174,4 +169,107 @@ func powMod(x, e int) int {
 		e /= 2
 	}
 	return res
+}
+
+// ======================
+// data structure
+// ======================
+// BIT is a Binary Indexed Tree (Fenwick Tree) implementation
+type BIT struct {
+	n   int
+	bit []int
+}
+
+func NewBIT(n int) *BIT {
+	return &BIT{n: n + 2, bit: make([]int, n+3)}
+}
+
+func (b *BIT) Add(i, x int) {
+	i++
+	for i < len(b.bit) {
+		b.bit[i] += x
+		i += i & -i
+	}
+}
+
+func (b *BIT) Sum(i int) int {
+	i++
+	res := 0
+	for i > 0 {
+		res += b.bit[i]
+		i -= i & -i
+	}
+	return res
+}
+
+// Stack is a simple stack implementation
+type Stack[T any] struct {
+	data []T
+}
+
+func NewStack[T any](size int) *Stack[T] {
+	return &Stack[T]{data: make([]T, size)}
+}
+
+func (s *Stack[T]) Push(v T) {
+	s.data = append(s.data, v)
+}
+
+func (s *Stack[T]) Pop() T {
+	last := len(s.data) - 1
+	v := s.data[last]
+	s.data = s.data[:last]
+	return v
+}
+
+func (s *Stack[T]) Empty() bool {
+	return len(s.data) == 0
+}
+
+func (s *Stack[T]) Len() int {
+	return len(s.data)
+}
+
+func (s *Stack[T]) Top() T {
+	return s.data[len(s.data)-1]
+}
+
+// Queue is a simple queue implementation
+type Queue[T any] struct {
+	data []T
+	head int
+	tail int
+}
+
+func NewQueue[T any](size int) *Queue[T] {
+	return &Queue[T]{data: make([]T, size), head: 0, tail: 0}
+}
+func (q *Queue[T]) Enqueue(v T) {
+	q.data = append(q.data, v)
+	q.tail++
+}
+func (q *Queue[T]) Dequeue() T {
+	if q.head == q.tail {
+		panic("queue is empty")
+	}
+	v := q.data[q.head]
+	q.head++
+	if q.head == len(q.data)/2 {
+		q.data = q.data[q.head:]
+		q.tail -= q.head
+		q.head = 0
+	}
+	return v
+}
+func (q *Queue[T]) Empty() bool {
+	return q.head == q.tail
+}
+func (q *Queue[T]) Len() int {
+	return q.tail - q.head
+}
+func (q *Queue[T]) Top() T {
+	if q.head == q.tail {
+		panic("queue is empty")
+	}
+	return q.data[q.head]
 }
