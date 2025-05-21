@@ -11,12 +11,10 @@ import (
 func init() {
 	sc.Buffer([]byte{}, math.MaxInt64)
 	sc.Split(bufio.ScanWords)
-	if ifUseCombination { initCombTable() }
 }
 
-const MAX_COMB_CACHE = 10000000
+const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
-const ifUseCombination = false
 
 func main() {
 	defer flush()
@@ -136,23 +134,29 @@ func outr2d(a [][]rune) {
 // calculation utils
 // =====================
 var fact, invFact []int
+var factorialInitialized = false
+// initFactorialTable initializes the factorial cache table
+func initFactorialTable() {
+	if factorialInitialized {
+		return
+	}
+	factorialInitialized = true
 
-// combination calculates nCk
-func initCombTable() {
-	fact = make([]int, MAX_COMB_CACHE+1)
-	invFact = make([]int, MAX_COMB_CACHE+1)
+	fact = make([]int, FACTORIAL_CACHE_SIZE+1)
+	invFact = make([]int, FACTORIAL_CACHE_SIZE+1)
 	fact[0] = 1
-	for i := 1; i <= MAX_COMB_CACHE; i++ {
+	for i := 1; i <= FACTORIAL_CACHE_SIZE; i++ {
 		fact[i] = fact[i-1] * i % MOD
 	}
-	invFact[MAX_COMB_CACHE] = powMod(fact[MAX_COMB_CACHE], MOD-2)
-	for i := MAX_COMB_CACHE - 1; i >= 0; i-- {
+	invFact[FACTORIAL_CACHE_SIZE] = powMod(fact[FACTORIAL_CACHE_SIZE], MOD-2)
+	for i := FACTORIAL_CACHE_SIZE - 1; i >= 0; i-- {
 		invFact[i] = invFact[i+1] * (i + 1) % MOD
 	}
 }
 
-// comb calculates nCk
+// combination calculates nCk
 func combMod(n, k int) int {
+	initFactorialTable()
 	if n < 0 || k < 0 || k > n {
 		return 0
 	}
