@@ -393,3 +393,49 @@ func (q *Queue[T]) Top() T {
 	}
 	return q.data[q.head]
 }
+
+// =====================
+// Math utils
+// ======================
+// isPrime checks if n is prime
+func isPrime(n int) bool {
+	if n < 2 { return false }
+	if n == 2 { return true }
+	cur := 3
+	max := int(math.Floor(float64(math.Sqrt(float64(n)))))
+	for cur <= max {
+		if m := n % cur; m == 0 {
+			return false
+		}
+		cur++
+	}
+	return true
+}
+
+// gcd calculates the greatest common divisor of a and b
+func gcd(a, b int) int {
+	if a < b {
+		a, b = b, a
+	}
+	for 1 <= a && 1 <= b {
+		mod := a % b
+		if mod == 0 {
+			return b
+		}
+		a, b = b, mod
+	}
+	if 1 <= a { return a}
+	return b
+}
+
+// gcds calculates the greatest common divisor of a slice of integers
+func gcds(a ...int) int {
+	if len(a) < 2 {
+		panic("gcds: at least 2 arguments required")
+	}
+	g := a[0]
+	for i := 1; i < len(a); i++ {
+		g = gcd(g, a[i])
+	}
+	return g
+}
