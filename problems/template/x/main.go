@@ -367,3 +367,24 @@ func comb(n, k int) int64 {
 	}
 	return factorial(n) / (factorial(k) * factorial(n-k))
 }
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func abs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
