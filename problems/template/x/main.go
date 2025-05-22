@@ -130,6 +130,15 @@ func outr2d(a [][]rune) {
 	}
 }
 
+// ======================
+// type utils
+// ======================
+type Number interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+		~float32 | ~float64
+}
+
 // =====================
 // calculation utils
 // =====================
@@ -368,21 +377,21 @@ func comb(n, k int) int64 {
 	return factorial(n) / (factorial(k) * factorial(n-k))
 }
 
-func min(a, b int) int {
+func min[T Number](a, b T) T {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func max(a, b int) int {
+func max[T Number](a, b T) T {
 	if a > b {
 		return a
 	}
 	return b
 }
 
-func abs(a int) int {
+func abs[T Number](a T) T {
 	if a < 0 {
 		return -a
 	}
