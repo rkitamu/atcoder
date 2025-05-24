@@ -69,6 +69,14 @@ func nr() rune {
 	}
 }
 
+// nr reads a single rune from stdin.
+func ns() []rune {
+	if !sc.Scan() {
+		panic("failed to scan next token")
+	}
+	return []rune(sc.Text())
+}
+
 /* なんかtest.sh実行時だけエラーでる
 // nr reads a single rune from stdin.
 func nr() rune {
