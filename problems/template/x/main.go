@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"strconv"
+	// "container/heap"
 )
 
 func init() {
@@ -293,6 +294,30 @@ func (q *Queue[T]) Top() T {
 		panic("queue is empty")
 	}
 	return q.data[q.head]
+}
+
+// Priority Queue
+// usage:
+// 	import "container/heap"
+// 	h := &ItemHeap{}
+// 	heap.Init(h)
+// 	heap.Push(h, &Item{value: tc.tcase[i]})
+// 	heap.Pop(h).(*Item)
+type Item struct {
+	value int
+}
+type ItemHeap []*Item
+func (h ItemHeap) Len() int            { return len(h) }
+// min-heap implementation
+func (h ItemHeap) Less(i, j int) bool  { return h[i].value < h[j].value }
+func (h ItemHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *ItemHeap) Push(x interface{}) { *h = append(*h, x.(*Item)) }
+func (h *ItemHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
 }
 
 // =====================
