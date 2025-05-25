@@ -30,10 +30,13 @@ mkdir -p "$actualdir"
 diffdir_created=0  # defer creation of diffs/
 
 # Build
-if ! go build -o "$bin" "$src"; then
+pushd "$basedir" > /dev/null || exit 1
+if ! go build -o "$letter.out" "main.go"; then
+#if ! go build -o "$bin" "$src"; then
   echo "Build failed"
   exit 1
 fi
+popd > /dev/null || exit 1
 
 # Enable nullglob
 shopt -s nullglob
