@@ -3,7 +3,6 @@ package main
 import (
 	"strconv"
 	"rkitamu/contest/lib/io"
-	// "container/heap"
 )
 
 func main() {
