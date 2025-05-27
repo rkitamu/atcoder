@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"strconv"
+	"strings"
 	// "container/heap"
 )
 
@@ -19,6 +20,15 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	s := string(ns())
+
+	for i := 0; i < 26; i++ {
+		cur := rune('a' + i)
+		if !strings.Contains(s, string(cur)) {
+			out(fmt.Sprintf("%c", cur))
+			break
+		}
+	}
 }
 
 // =====================
