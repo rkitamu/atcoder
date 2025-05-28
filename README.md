@@ -6,7 +6,7 @@ This project provides a simple test automation workflow for Go-based AtCoder wor
 
 ## ⚙️ Setup
 
-### 🛣️ Use with VS Code DevContainer (Optional)
+### 🚣️ Use with VS Code DevContainer
 
 To get started instantly with a preconfigured environment using [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), follow these steps:
 
@@ -26,7 +26,17 @@ This will build a container with:
 * Pre-installed VS Code extensions for Go and testing
 * Task to install `.vsix` extensions manually
 
-#### 2. Install case-runner.vsix
+#### 2. Install case-runner.vsix (Optional)
+
+case-runner is a tool for testing programs using sample cases downloaded by `setup.sh`
+
+Compile case-runner:
+
+```bash
+$ npm install -g @vscode/vsce
+$ cd path/to/atcoder/case-runner
+$ vsce package
+```
 
 Run the following VS Code task:
 
@@ -34,7 +44,7 @@ Run the following VS Code task:
 Cmd+Shift+P → Tasks: Run Task → Install VSIX Extensions
 ```
 
-This will install `case-runner` from local `.vsix`.
+This will install `case-runner` from compiled `.vsix`.
 
 ### 1. Install dependencies
 
@@ -85,9 +95,9 @@ atcoder/
 │   │   │   ├── expect/
 │   │   │   │   ├── a_case01.expect.txt
 │   │   │   ├── actual/       # Output by test.sh
-│   │   │   ├── diffs/        # Diff files if mismatched
+│   │   │   └── diffs/        # Diff files if mismatched
 │   ├── b/
-│   │   ├── ...
+│   │   └── ...
 │   └── template/             # Template files for new problems
 │       ├── x/
 │           ├── main.go
