@@ -19,29 +19,27 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
-	n := ni()
-	d := ni()
-	a := nis(n)
 
-	dist := make(map[int]int, n)
-
-	for i := 0; i < n; i++ {
-		dist[a[i]]++
-		/* 		if _, ok := dist[a[i]]; !ok {
-		   			dist[a[i]] = 0
-		   		} else {
-		   			dist[a[i]]++
-		   		} */
+	q := ni()
+	queue := NewQueue[int](0)
+	flg := false
+	for i := 0; i < q; i++ {
+		t := ni()
+		x := 0
+		if t == 1 {
+			x = ni()
+			queue.Enqueue(x)
+		} else {
+			flg = true
+			if queue.Empty() {
+				out(-1)
+				continue
+			}
+			out(queue.Dequeue())
+		}
 	}
-
-	dp := make([][]int, 2)
-	for j := 0; j < 2; j++ {
-		dp[j] = make([]int, len(dist))
-	}
-
-	ans := 0
-	for i := 0; i < n+1; i++ {
-		// TDOO: write recurrence formula
+	if !flg {
+		out()
 	}
 }
 
@@ -177,10 +175,6 @@ type Number interface {
 // =====================
 var fact, invFact []int
 var factorialInitialized = false
-<<<<<<< HEAD
-
-=======
->>>>>>> main
 // initFactorialTable initializes the factorial cache table
 func initFactorialTable() {
 	if factorialInitialized {
@@ -326,31 +320,16 @@ func (q *Queue[T]) Top() T {
 
 // Priority Queue
 // usage:
-<<<<<<< HEAD
-//
-//	import "container/heap"
-//	h := &ItemHeap{}
-//	heap.Init(h)
-//	heap.Push(h, &Item{value: tc.tcase[i]})
-//	heap.Pop(h).(*Item)
-=======
 // 	import "container/heap"
 // 	h := &ItemHeap{}
 // 	heap.Init(h)
 // 	heap.Push(h, &Item{value: tc.tcase[i]})
 // 	heap.Pop(h).(*Item)
->>>>>>> main
 type Item struct {
 	value int
 }
 type ItemHeap []*Item
-<<<<<<< HEAD
-
-func (h ItemHeap) Len() int { return len(h) }
-
-=======
 func (h ItemHeap) Len() int            { return len(h) }
->>>>>>> main
 // min-heap implementation
 func (h ItemHeap) Less(i, j int) bool  { return h[i].value < h[j].value }
 func (h ItemHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
@@ -368,17 +347,8 @@ func (h *ItemHeap) Pop() interface{} {
 // ======================
 // isPrime checks if n is prime
 func isPrime(n int) bool {
-<<<<<<< HEAD
-	if n < 2 {
-		return false
-	}
-	if n == 2 {
-		return true
-	}
-=======
 	if n < 2 { return false }
 	if n == 2 { return true }
->>>>>>> main
 	cur := 3
 	max := int(math.Floor(float64(math.Sqrt(float64(n)))))
 	for cur <= max {
@@ -402,13 +372,7 @@ func gcd(a, b int) int {
 		}
 		a, b = b, mod
 	}
-<<<<<<< HEAD
-	if 1 <= a {
-		return a
-	}
-=======
 	if 1 <= a { return a}
->>>>>>> main
 	return b
 }
 
@@ -444,12 +408,7 @@ func lcms(a ...int) int {
 }
 
 var factorialCache = make([]int64, 0)
-<<<<<<< HEAD
-
-func factorial(n int) int64 {
-=======
 func factorial(n  int) int64 {
->>>>>>> main
 	if n < 0 {
 		panic("factorial: n must be non-negative")
 	}
