@@ -21,14 +21,32 @@ func main() {
 	defer flush()
 	t := ni()
 	for i := 0; i < t; i++ {
-		ni()
+		n := ni()
 		s := ns()
-		out(solveOne(s))
+		solve(n, s)
 	}
 }
 
-func solveOne(s []rune) int {
-	return 0
+func solve(n int, s []rune) {
+	dp := make([][]int, n + 1)
+	dp[0] = []int{0, 0, 0}
+	for i := 1; i <= n; i++ {
+		tobeZeroCost := 0
+		tobeOneCost := 0
+		if (s[i-1] == '0') {
+			tobeOneCost++
+		} else {
+			tobeZeroCost++
+		}
+
+		a := dp[i-1][0] + tobeZeroCost
+		b := min(dp[i-1][0], dp[i-1][1]) + tobeOneCost
+		c := min(min(dp[i-1][0], dp[i-1][1]), dp[i-1][2]) + tobeZeroCost
+
+		dp[i] = []int{a, b, c}
+	}
+	ans := min(min(dp[n][0], dp[n][1]), dp[n][2])
+	out(ans)
 }
 
 // =====================
