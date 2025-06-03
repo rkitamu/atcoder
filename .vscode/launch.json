@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Current Go File",
+      "type": "go",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Debug Go (prompt)",
       "type": "go",
       "request": "launch",
