@@ -121,6 +121,25 @@ func flush() {
 	}
 }
 
+// 相対誤差が10^-6: formatFloat(f, 7)
+func formatFloat(f float64, precision int) string {
+	if math.IsNaN(f) || math.IsInf(f, 0) {
+		return fmt.Sprintf("%v", f)
+	}
+
+	magnitude := math.Log10(math.Abs(f))
+	effectivePrecision := precision - int(magnitude) - 1
+
+	if effectivePrecision < 0 {
+		effectivePrecision = 0
+	}
+	if effectivePrecision > 15 { // float64の限界
+		effectivePrecision = 15
+	}
+
+	return fmt.Sprintf("%.*f", effectivePrecision, f)
+}
+
 // out writes the output to stdout.
 func out(v ...interface{}) {
 	_, e := fmt.Fprintln(wtr, v...)
@@ -412,11 +431,21 @@ func (h *ItemHeap) Pop() interface{} {
 }
 
 type Vector struct {
-	X, Y int // または float64
+	X, Y int
 }
 
 func NewVector(x, y int) *Vector {
 	return &Vector{X: x, Y: y}
+}
+
+func NewVectorFromPointsSlice(start, end []int) *Vector {
+	if len(start) < 2 || len(end) < 2 {
+		panic("require at least 2 elements (x, y)")
+	}
+	return &Vector{
+		X: end[0] - start[0],
+		Y: end[1] - start[1],
+	}
 }
 
 func (v Vector) Add(other Vector) *Vector {
