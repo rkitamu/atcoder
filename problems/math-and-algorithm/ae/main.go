@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"strconv"
+	// "container/heap"
 )
 
 func init() {
@@ -22,30 +23,26 @@ func main() {
 	b := nis(2)
 	c := nis(2)
 
-	vecba := []int{a[0]-b[0], a[1]-b[1]}
-	vecbc := []int{c[0]-b[0], c[1]-b[1]}
+	bc := NewVectorFromPointsSlice(b, c)
+	ba := NewVectorFromPointsSlice(b, a)
 
-	ipbabc := vecba[0]*vecbc[0] + vecba[1]*vecbc[1]
-	if ipbabc <= 0 {
-		ba := math.Sqrt(math.Pow(float64(vecba[0]), 2) + math.Pow(float64(vecba[1]), 2))
-		out(fmt.Sprintf("%.7f", abs(ba)))
-		return
+	dot := bc.Dot(*ba)
+
+	ans := 0.
+	if dot <= 0 {
+		ans = ba.Magnitude()
+	} else if 0 < dot {
+		cb := NewVectorFromPointsSlice(c, b)
+		ca := NewVectorFromPointsSlice(c, a)
+		dot := cb.Dot(*ca)
+		if dot <= 0 {
+			ans = ca.Magnitude()
+		} else if 0 < dot {
+			cm := ba.CrossMagnitude(*bc)
+			ans = cm / bc.Magnitude()
+		}
 	}
-
-	veccb := []int{b[0]-c[0], b[1]-c[1]}
-	vecca := []int{a[0]-c[0], a[1]-c[1]}
-
-	ipcbca := veccb[0]*vecca[0] + veccb[1]*vecca[1]
-	if ipcbca <= 0 {
-		cb := math.Sqrt(math.Pow(float64(vecca[0]), 2) + math.Pow(float64(vecca[1]), 2))
-		out(fmt.Sprintf("%.7f", abs(cb)))
-		return
-	}
-
-	bc := math.Sqrt(math.Pow(float64(vecbc[0]), 2) + math.Pow(float64(vecbc[1]), 2))
-	s := float64(vecbc[0]*vecba[1] - vecbc[1]*vecba[0])
-
-	out(fmt.Sprintf("%.7f", abs(s/bc)))
+	out(formatFloat(ans, 7))
 }
 
 // =====================
@@ -95,6 +92,14 @@ func nr() rune {
 		bufRunes = []rune(sc.Text())
 		bufIdx = 0
 	}
+}
+
+// nr reads a single rune from stdin.
+func ns() []rune {
+	if !sc.Scan() {
+		panic("failed to scan next token")
+	}
+	return []rune(sc.Text())
 }
 
 /* なんかtest.sh実行時だけエラーでる
@@ -158,6 +163,24 @@ func outr2d(a [][]rune) {
 	}
 }
 
+func formatFloat(f float64, precision int) string {
+    if math.IsNaN(f) || math.IsInf(f, 0) {
+        return fmt.Sprintf("%v", f)
+    }
+    
+    magnitude := math.Log10(math.Abs(f))
+    effectivePrecision := precision - int(magnitude) - 1
+    
+    if effectivePrecision < 0 {
+        effectivePrecision = 0
+    }
+    if effectivePrecision > 15 {  // float64の限界
+        effectivePrecision = 15
+    }
+    
+    return fmt.Sprintf("%.*f", effectivePrecision, f)
+}
+
 // ======================
 // type utils
 // ======================
@@ -172,6 +195,7 @@ type Number interface {
 // =====================
 var fact, invFact []int
 var factorialInitialized = false
+
 // initFactorialTable initializes the factorial cache table
 func initFactorialTable() {
 	if factorialInitialized {
@@ -210,6 +234,47 @@ func powMod(x, e int) int {
 		e /= 2
 	}
 	return res
+}
+
+type Vector struct {
+	X, Y int
+}
+
+func NewVector(x, y int) *Vector {
+	return &Vector{X: x, Y: y}
+}
+
+func NewVectorFromPointsSlice(start, end []int) *Vector {
+    if len(start) < 2 || len(end) < 2 {
+        panic("require at least 2 elements (x, y)")
+    }
+    return &Vector{
+        X: end[0] - start[0],
+        Y: end[1] - start[1],
+    }
+}
+
+func (v Vector) Add(other Vector) *Vector {
+	return &Vector{
+		X: v.X + other.X,
+		Y: v.Y + other.Y,
+	}
+}
+
+func (v Vector) Magnitude() float64 {
+	return math.Sqrt(float64(v.X*v.X + v.Y*v.Y))
+}
+
+func (v Vector) Dot(other Vector) float64 {
+	return float64(v.X*other.X + v.Y*other.Y)
+}
+
+func (v Vector) Cross(other Vector) int {
+	return v.X*other.Y - v.Y*other.X
+}
+
+func (v Vector) CrossMagnitude(other Vector) float64 {
+	return math.Abs(float64(v.Cross(other)))
 }
 
 // ======================
@@ -315,13 +380,44 @@ func (q *Queue[T]) Top() T {
 	return q.data[q.head]
 }
 
+// Priority Queue
+// usage:
+//
+//	import "container/heap"
+//	h := &ItemHeap{}
+//	heap.Init(h)
+//	heap.Push(h, &Item{value: tc.tcase[i]})
+//	heap.Pop(h).(*Item)
+type Item struct {
+	value int
+}
+type ItemHeap []*Item
+
+func (h ItemHeap) Len() int { return len(h) }
+
+// min-heap implementation
+func (h ItemHeap) Less(i, j int) bool  { return h[i].value < h[j].value }
+func (h ItemHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *ItemHeap) Push(x interface{}) { *h = append(*h, x.(*Item)) }
+func (h *ItemHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
+}
+
 // =====================
 // Math utils
 // ======================
 // isPrime checks if n is prime
 func isPrime(n int) bool {
-	if n < 2 { return false }
-	if n == 2 { return true }
+	if n < 2 {
+		return false
+	}
+	if n == 2 {
+		return true
+	}
 	cur := 3
 	max := int(math.Floor(float64(math.Sqrt(float64(n)))))
 	for cur <= max {
@@ -345,7 +441,9 @@ func gcd(a, b int) int {
 		}
 		a, b = b, mod
 	}
-	if 1 <= a { return a}
+	if 1 <= a {
+		return a
+	}
 	return b
 }
 
@@ -381,7 +479,8 @@ func lcms(a ...int) int {
 }
 
 var factorialCache = make([]int64, 0)
-func factorial(n  int) int64 {
+
+func factorial(n int) int64 {
 	if n < 0 {
 		panic("factorial: n must be non-negative")
 	}
