@@ -153,6 +153,7 @@ type Number interface {
 // =====================
 var fact, invFact []int
 var factorialInitialized = false
+
 // initFactorialTable initializes the factorial cache table
 func initFactorialTable() {
 	if factorialInitialized {
@@ -222,6 +223,93 @@ func (b *BIT) Sum(i int) int {
 		i -= i & -i
 	}
 	return res
+}
+
+// SegmentTree (WIP(Implemented: push, add, get, sum))
+type SegmentTree struct {
+	n    int
+	data []int
+	lazy []int
+}
+
+func NewSegmentTree(n int) *SegmentTree {
+	size := 1
+	for size < n {
+		size <<= 1
+	}
+	return &SegmentTree{
+		n:    size,
+		data: make([]int, 2*size),
+		lazy: make([]int, 2*size),
+	}
+}
+
+func (st *SegmentTree) push(k, l, r int) {
+	if st.lazy[k] != 0 {
+		st.data[k] += (r - l) * st.lazy[k]
+		if r-l > 1 {
+			st.lazy[2*k+1] += st.lazy[k]
+			st.lazy[2*k+2] += st.lazy[k]
+		}
+		st.lazy[k] = 0
+	}
+}
+
+// Add x to range [a, b)
+func (st *SegmentTree) Add(a, b, x int) {
+	var f func(k, l, r int)
+	f = func(k, l, r int) {
+		st.push(k, l, r)
+		if r <= a || b <= l {
+			return
+		}
+		if a <= l && r <= b {
+			st.lazy[k] += x
+			st.push(k, l, r)
+		} else {
+			mid := (l + r) / 2
+			f(2*k+1, l, mid)
+			f(2*k+2, mid, r)
+			st.data[k] = st.data[2*k+1] + st.data[2*k+2]
+		}
+	}
+	f(0, 0, st.n)
+}
+
+// Get value at index i
+func (st *SegmentTree) Get(i int) int {
+	k := 0
+	l, r := 0, st.n
+	for r-l > 1 {
+		st.push(k, l, r)
+		mid := (l + r) / 2
+		if i < mid {
+			k = 2*k + 1
+			r = mid
+		} else {
+			k = 2*k + 2
+			l = mid
+		}
+	}
+	st.push(k, l, r)
+	return st.data[k]
+}
+
+// Get sum of range [a, b)
+func (st *SegmentTree) Sum(a, b int) int {
+	var f func(k, l, r int) int
+	f = func(k, l, r int) int {
+		st.push(k, l, r)
+		if r <= a || b <= l {
+			return 0
+		}
+		if a <= l && r <= b {
+			return st.data[k]
+		}
+		mid := (l + r) / 2
+		return f(2*k+1, l, mid) + f(2*k+2, mid, r)
+	}
+	return f(0, 0, st.n)
 }
 
 // Stack is a simple stack implementation
@@ -298,16 +386,19 @@ func (q *Queue[T]) Top() T {
 
 // Priority Queue
 // usage:
-// 	import "container/heap"
-// 	h := &ItemHeap{}
-// 	heap.Init(h)
-// 	heap.Push(h, &Item{value: tc.tcase[i]})
-// 	heap.Pop(h).(*Item)
+//
+//	import "container/heap"
+//	h := &ItemHeap{}
+//	heap.Init(h)
+//	heap.Push(h, &Item{value: tc.tcase[i]})
+//	heap.Pop(h).(*Item)
 type Item struct {
 	value int
 }
 type ItemHeap []*Item
-func (h ItemHeap) Len() int            { return len(h) }
+
+func (h ItemHeap) Len() int { return len(h) }
+
 // min-heap implementation
 func (h ItemHeap) Less(i, j int) bool  { return h[i].value < h[j].value }
 func (h ItemHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
@@ -320,13 +411,48 @@ func (h *ItemHeap) Pop() interface{} {
 	return x
 }
 
+type Vector struct {
+	X, Y int // または float64
+}
+
+func NewVector(x, y int) *Vector {
+	return &Vector{X: x, Y: y}
+}
+
+func (v Vector) Add(other Vector) *Vector {
+	return &Vector{
+		X: v.X + other.X,
+		Y: v.Y + other.Y,
+	}
+}
+
+func (v Vector) Magnitude() float64 {
+	return math.Sqrt(float64(v.X*v.X + v.Y*v.Y))
+}
+
+func (v Vector) Dot(other Vector) float64 {
+	return float64(v.X*other.X + v.Y*other.Y)
+}
+
+func (v Vector) Cross(other Vector) int {
+	return v.X*other.Y - v.Y*other.X
+}
+
+func (v Vector) CrossMagnitude(other Vector) float64 {
+	return math.Abs(float64(v.Cross(other)))
+}
+
 // =====================
 // Math utils
 // ======================
 // isPrime checks if n is prime
 func isPrime(n int) bool {
-	if n < 2 { return false }
-	if n == 2 { return true }
+	if n < 2 {
+		return false
+	}
+	if n == 2 {
+		return true
+	}
 	cur := 3
 	max := int(math.Floor(float64(math.Sqrt(float64(n)))))
 	for cur <= max {
@@ -350,7 +476,9 @@ func gcd(a, b int) int {
 		}
 		a, b = b, mod
 	}
-	if 1 <= a { return a}
+	if 1 <= a {
+		return a
+	}
 	return b
 }
 
@@ -386,7 +514,8 @@ func lcms(a ...int) int {
 }
 
 var factorialCache = make([]int64, 0)
-func factorial(n  int) int64 {
+
+func factorial(n int) int64 {
 	if n < 0 {
 		panic("factorial: n must be non-negative")
 	}
