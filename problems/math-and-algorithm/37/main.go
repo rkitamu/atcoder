@@ -61,7 +61,7 @@ func main() {
 		if aEnd.Lt(aStart) {
 			Swap(&aStart, &aEnd)
 		}
-		if bStart.Lte(aEnd) || aStart.Lte(bEnd) {
+		if aStart.Max(bStart).Lte(aEnd.Min(bEnd)) {
 		} else {
 			ans = false
 		}
@@ -526,7 +526,6 @@ func (v Vector) CrossMagnitude(other Vector) float64 {
 
 // Pair is C++ pairっぽいやつ
 // WIP: Number以外(constraints.Ordered にする)
-// WIP: 比較関数足りない
 type Pair[T, U Number] struct {
 	First  T
 	Second U
@@ -550,6 +549,36 @@ func (p Pair[T, U]) Lte(other Pair[T, U]) bool {
 	} else {
 		return p.First <= other.First
 	}
+}
+
+func (p Pair[T, U]) Gt(other Pair[T, U]) bool {
+	if p.First == other.First {
+		return p.Second > other.Second
+	} else {
+		return p.First > other.First
+	}
+}
+
+func (p Pair[T, U]) Gte(other Pair[T, U]) bool {
+	if p.First == other.First {
+		return p.Second >= other.Second
+	} else {
+		return p.First >= other.First
+	}
+}
+
+func (p Pair[T, U]) Max(other Pair[T, U]) Pair[T, U] {
+	if p.Lt(other) {
+		return other
+	}
+	return p
+}
+
+func (p Pair[T, U]) Min(other Pair[T, U]) Pair[T, U] {
+	if p.Lt(other) {
+		return p
+	}
+	return other
 }
 
 // =====================

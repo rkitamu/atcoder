@@ -605,3 +605,68 @@ func fibonacci(n int) int {
 	}
 	return b
 }
+
+// =====================
+// Programming utils
+// ======================
+// Pair is C++のPairっぽいやつ
+// WIP: Number以外(constraints.Ordered にする)
+type Pair[T, U Number] struct {
+	First  T
+	Second U
+}
+
+func NewPair[T, U Number](first T, second U) Pair[T, U] {
+	return Pair[T, U]{First: first, Second: second}
+}
+
+func (p Pair[T, U]) Lt(other Pair[T, U]) bool {
+	if p.First == other.First {
+		return p.Second < other.Second
+	} else {
+		return p.First < other.First
+	}
+}
+
+func (p Pair[T, U]) Lte(other Pair[T, U]) bool {
+	if p.First == other.First {
+		return p.Second <= other.Second
+	} else {
+		return p.First <= other.First
+	}
+}
+
+func (p Pair[T, U]) Gt(other Pair[T, U]) bool {
+	if p.First == other.First {
+		return p.Second > other.Second
+	} else {
+		return p.First > other.First
+	}
+}
+
+func (p Pair[T, U]) Gte(other Pair[T, U]) bool {
+	if p.First == other.First {
+		return p.Second >= other.Second
+	} else {
+		return p.First >= other.First
+	}
+}
+
+func (p Pair[T, U]) Max(other Pair[T, U]) Pair[T, U] {
+	if p.Lt(other) {
+		return other
+	}
+	return p
+}
+
+func (p Pair[T, U]) Min(other Pair[T, U]) Pair[T, U] {
+	if p.Lt(other) {
+		return p
+	}
+	return other
+}
+
+// Swap swaps the values of two variables.
+func Swap[T any](a, b *T) {
+	*a, *b = *b, *a
+}
