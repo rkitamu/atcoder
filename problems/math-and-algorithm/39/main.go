@@ -32,9 +32,9 @@ func main() {
 	}
 	var b strings.Builder
 	for i := 1; i < n; i++ {
-		if (fd[i] == 0) {
+		if fd[i] == 0 {
 			b.WriteString("=")
-		} else if (fd[i] > 0) {
+		} else if fd[i] > 0 {
 			b.WriteString("<")
 		} else {
 			b.WriteString(">")
