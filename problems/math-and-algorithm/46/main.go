@@ -19,6 +19,53 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	r, c := ni(), ni()
+	type Memo struct {
+		point   int
+		visited bool
+	}
+	memo := make([][]Memo, r+1)
+	for i := 0; i <= r; i++ {
+		memo[i] = make([]Memo, c+1)
+	}
+	sy, sx := ni(), ni()
+	gy, gx := ni(), ni()
+
+	maze := nrs2d(r, c, 1)
+
+	type P struct {
+		x, y, bp int
+	}
+
+	q := NewQueue[P]()
+	q.Enqueue(P{x: sx, y: sy, bp: 0})
+
+	bfs := func(next P) {
+		if maze[next.x][next.y] == '.' {
+			q.Enqueue(next)
+		}
+	}
+
+	for !q.Empty() {
+		p := q.Dequeue()
+		cost := p.bp + 1
+		if memo[p.x][p.y].visited {
+			continue
+		} else {
+			memo[p.x][p.y].visited = true
+			memo[p.x][p.y].point = p.bp
+		}
+		up := P{x: p.x - 1, y: p.y, bp: cost}
+		down := P{x: p.x + 1, y: p.y, bp: cost}
+		left := P{x: p.x, y: p.y - 1, bp: cost}
+		right := P{x: p.x, y: p.y + 1, bp: cost}
+		bfs(up)
+		bfs(down)
+		bfs(left)
+		bfs(right)
+	}
+
+	out(memo[gy][gx].point)
 }
 
 // =====================
@@ -373,8 +420,8 @@ type Queue[T any] struct {
 	tail int
 }
 
-func NewQueue[T any](size int) *Queue[T] {
-	return &Queue[T]{data: make([]T, size), head: 0, tail: 0}
+func NewQueue[T any]() *Queue[T] {
+	return &Queue[T]{data: make([]T, 0), head: 0, tail: 0}
 }
 func (q *Queue[T]) Enqueue(v T) {
 	q.data = append(q.data, v)
