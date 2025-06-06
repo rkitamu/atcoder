@@ -19,6 +19,28 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	m := ni()
+	g := NewGraph(n + 1)
+	for i := 0; i < m; i++ {
+		a, b := ni(), ni()
+		g.AppendNext(a, b)
+		g.AppendNext(b, a)
+	}
+
+	ans := 0
+	for i := 0; i < n+1; i++ {
+		cnt := 0
+		for _, next := range g.GetNode(i).Nexts {
+			if next < i {
+				cnt++
+			}
+		}
+		if cnt == 1 {
+			ans++
+		}
+	}
+	out(ans)
 }
 
 // =====================
