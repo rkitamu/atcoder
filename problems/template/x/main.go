@@ -51,13 +51,13 @@ func nis(n int) []int {
 	return a
 }
 
-var bufRunes []rune
+var bufBytes []byte
 var bufIdx int
 
-func nr() rune {
+func nr() byte {
 	for {
-		if bufIdx < len(bufRunes) {
-			r := bufRunes[bufIdx]
+		if bufIdx < len(bufBytes) {
+			r := bufBytes[bufIdx]
 			bufIdx++
 			return r
 		}
@@ -65,17 +65,17 @@ func nr() rune {
 		if !sc.Scan() {
 			panic("failed to scan next token")
 		}
-		bufRunes = []rune(sc.Text())
+		bufBytes = []byte(sc.Text())
 		bufIdx = 0
 	}
 }
 
-// nr reads a single rune from stdin.
-func ns() []rune {
+// nr reads a single string from stdin.
+func ns() string {
 	if !sc.Scan() {
 		panic("failed to scan next token")
 	}
-	return []rune(sc.Text())
+	return sc.Text()
 }
 
 /* なんかtest.sh実行時だけエラーでる
@@ -92,21 +92,21 @@ func nr() rune {
 	}
 }*/
 
-// nr reads n runes from stdin.
-func nrs(n int) []rune {
-	a := make([]rune, n)
+// nr reads n bytes from stdin.
+func nrs(n int) []byte {
+	a := make([]byte, n)
 	for i := 0; i < n; i++ {
 		a[i] = nr()
 	}
 	return a
 }
 
-// nrs2d reads n * m runes from stdin.
-func nrs2d(n, m, offset int) [][]rune {
-	a := make([][]rune, n+offset)
+// nrs2d reads n * m bytes from stdin.
+func nrs2d(n, m, offset int) [][]byte {
+	a := make([][]byte, n+offset)
 	for i := offset; i < n+offset; i++ {
 		tmp := nrs(m)
-		prepended := make([]rune, offset+len(tmp))
+		prepended := make([]byte, offset+len(tmp))
 		copy(prepended[offset:], tmp)
 		a[i] = prepended
 	}
