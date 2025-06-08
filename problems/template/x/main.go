@@ -488,22 +488,30 @@ func (g *Graph) GetNode(i int) *Node {
 }
 
 func (g *Graph) CreateNode(i int) {
-	g.Nodes[i] = Node{Nexts: make([]int, 0)}
+	g.Nodes[i] = Node{Nexts: make(map[int]int, 0)}
 }
 
-func (g *Graph) AppendNext(i, next int) {
-	g.Nodes[i].AppendNext(next)
+func (g *Graph) AppendNext(i, next, weight int) {
+	g.Nodes[i].AppendNext(next, weight)
+}
+
+func (g *Graph) SetWeight(u, v, w int) {
+	g.Nodes[u].SetWeight(v, w)
 }
 
 type Node struct {
-	Nexts []int
+	Nexts map[int]int
 }
 
-func (n *Node) AppendNext(next int) {
+func (n *Node) AppendNext(next, weight int) {
 	if n.Nexts == nil {
-		n.Nexts = make([]int, 0)
+		n.Nexts = make(map[int]int, 0)
 	}
-	n.Nexts = append(n.Nexts, next)
+	n.Nexts[next] = weight
+}
+
+func (n *Node) SetWeight(v, w int) {
+	n.Nexts[v] = w
 }
 
 // =====================
