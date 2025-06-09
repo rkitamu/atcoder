@@ -652,6 +652,136 @@ func fibonacci(n int) int {
 	return b
 }
 
+type Matrix[T Number] struct {
+	Rows int
+	Cols int
+	Data [][]T
+}
+
+// NewMatrix creates a new matrix of given size initialized to zero
+func NewMatrix[T Number](rows, cols int) *Matrix[T] {
+	data := make([][]T, rows)
+	for i := range data {
+		data[i] = make([]T, cols)
+	}
+	return &Matrix[T]{Rows: rows, Cols: cols, Data: data}
+}
+
+// IdentityMatrix creates an identity matrix of size n
+func IdentityMatrix[T Number](n int) *Matrix[T] {
+	one := T(1)
+	m := NewMatrix[T](n, n)
+	for i := 0; i < n; i++ {
+		m.Data[i][i] = one
+	}
+	return m
+}
+
+func (m *Matrix[T]) Add(b *Matrix[T]) *Matrix[T] {
+	res := NewMatrix[T](m.Rows, m.Cols)
+	for i := 0; i < m.Rows; i++ {
+		for j := 0; j < m.Cols; j++ {
+			res.Data[i][j] = m.Data[i][j] + b.Data[i][j]
+		}
+	}
+	return res
+}
+
+func (m *Matrix[T]) Sub(b *Matrix[T]) *Matrix[T] {
+	res := NewMatrix[T](m.Rows, m.Cols)
+	for i := 0; i < m.Rows; i++ {
+		for j := 0; j < m.Cols; j++ {
+			res.Data[i][j] = m.Data[i][j] - b.Data[i][j]
+		}
+	}
+	return res
+}
+
+func (m *Matrix[T]) Mul(b *Matrix[T]) *Matrix[T] {
+	if m.Cols != b.Rows {
+		panic("matrix dimensions do not match for multiplication")
+	}
+	res := NewMatrix[T](m.Rows, b.Cols)
+	for i := 0; i < m.Rows; i++ {
+		for j := 0; j < b.Cols; j++ {
+			var sum T
+			for k := 0; k < m.Cols; k++ {
+				sum += m.Data[i][k] * b.Data[k][j]
+			}
+			res.Data[i][j] = sum
+		}
+	}
+	return res
+}
+
+func (m *Matrix[T]) Pow(n int64) *Matrix[T] {
+	if m.Rows != m.Cols {
+		panic("matrix must be square for exponentiation")
+	}
+	res := IdentityMatrix[T](m.Rows)
+	base := m.Copy()
+	for n > 0 {
+		if n%2 == 1 {
+			res = res.Mul(base)
+		}
+		base = base.Mul(base)
+		n /= 2
+	}
+	return res
+}
+
+// MulMod performs matrix multiplication with modular arithmetic
+func (m *Matrix[T]) MulMod(b *Matrix[T]) *Matrix[T] {
+	if m.Cols != b.Rows {
+		panic("matrix dimensions do not match for multiplication")
+	}
+	res := NewMatrix[T](m.Rows, b.Cols)
+	for i := 0; i < m.Rows; i++ {
+		for j := 0; j < b.Cols; j++ {
+			sum := 0
+			for k := 0; k < m.Cols; k++ {
+				product := mulMod(int(m.Data[i][k]), int(b.Data[k][j]))
+				sum = addMod(sum, product)
+			}
+			res.Data[i][j] = T(sum)
+		}
+	}
+	return res
+}
+
+// PowMod performs matrix exponentiation with modular arithmetic
+func (m *Matrix[T]) PowMod(n int64) *Matrix[T] {
+	if m.Rows != m.Cols {
+		panic("matrix must be square for exponentiation")
+	}
+	res := IdentityMatrix[T](m.Rows)
+	base := m.Copy()
+
+	for n > 0 {
+		if n%2 == 1 {
+			res = res.MulMod(base)
+		}
+		base = base.MulMod(base)
+		n /= 2
+	}
+	return res
+}
+
+func (m *Matrix[T]) Copy() *Matrix[T] {
+	cpy := NewMatrix[T](m.Rows, m.Cols)
+	for i := range m.Data {
+		copy(cpy.Data[i], m.Data[i])
+	}
+	return cpy
+}
+
+func (m *Matrix[T]) Print() {
+	for _, row := range m.Data {
+		fmt.Println(row)
+	}
+}
+
+
 // =====================
 // Programming utils
 // ======================
@@ -717,6 +847,15 @@ func Swap[T any](a, b *T) {
 	*a, *b = *b, *a
 }
 
+type Integer interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+
+type PracticalInteger interface {
+	~int | ~int32 | ~int64 | ~uint | ~uint32 | ~uint64
+}
+
 // MOD
 // 基本的なmod演算
 func mod(a int, m ...int) int {
@@ -728,10 +867,10 @@ func mod(a int, m ...int) int {
 }
 
 // mod加算
-func addMod(a, b int, m ...int) int {
-	modVal := MOD
+func addMod[T PracticalInteger](a, b T, m ...int) T {
+	modVal := T(MOD)
 	if len(m) > 0 {
-		modVal = m[0]
+		modVal = T(m[0])
 	}
 	return (a + b) % modVal
 }
