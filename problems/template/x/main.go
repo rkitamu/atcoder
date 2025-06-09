@@ -474,44 +474,59 @@ func (v Vector) CrossMagnitude(other Vector) float64 {
 	return math.Abs(float64(v.Cross(other)))
 }
 
-// Graph is generic graph structure
-type Graph struct {
-	Nodes []Node
+// Edge represents a connection from one node to another with an optional weight.
+type Edge struct {
+	To     int
+	Weight int
 }
 
-func NewGraph(size int) *Graph {
-	return &Graph{Nodes: make([]Node, size)}
-}
-
-func (g *Graph) GetNode(i int) *Node {
-	return &g.Nodes[i]
-}
-
-func (g *Graph) CreateNode(i int) {
-	g.Nodes[i] = Node{Nexts: make(map[int]int, 0)}
-}
-
-func (g *Graph) AppendNext(i, next, weight int) {
-	g.Nodes[i].AppendNext(next, weight)
-}
-
-func (g *Graph) SetWeight(u, v, w int) {
-	g.Nodes[u].SetWeight(v, w)
-}
-
+// Node represents a node in the graph with optional value and its outgoing edges.
 type Node struct {
-	Nexts map[int]int
+	ID    int
+	Value int
+	Edges []Edge
 }
 
-func (n *Node) AppendNext(next, weight int) {
-	if n.Nexts == nil {
-		n.Nexts = make(map[int]int, 0)
+// Graph represents a generic directed or undirected graph.
+type Graph struct {
+	Nodes map[int]*Node
+}
+
+// NewGraph initializes an empty graph.
+func NewGraph() *Graph {
+	return &Graph{
+		Nodes: make(map[int]*Node),
 	}
-	n.Nexts[next] = weight
 }
 
-func (n *Node) SetWeight(v, w int) {
-	n.Nexts[v] = w
+// AddNode adds a new node with the given ID and optional value.
+func (g *Graph) AddNode(id int, value int) {
+	g.Nodes[id] = &Node{
+		ID:    id,
+		Value: value,
+		Edges: []Edge{},
+	}
+}
+
+// AddEdge adds a directed edge from u to v with given weight.
+func (g *Graph) AddEdge(u, v, weight int) {
+	if _, ok := g.Nodes[u]; !ok {
+		g.AddNode(u, 0)
+	}
+	if _, ok := g.Nodes[v]; !ok {
+		g.AddNode(v, 0)
+	}
+	g.Nodes[u].Edges = append(g.Nodes[u].Edges, Edge{To: v, Weight: weight})
+}
+
+func (g *Graph) AddUndirectedEdge(u, v, weight int) {
+	g.AddEdge(u, v, weight)
+	g.AddEdge(v, u, weight)
+}
+
+// GetNode returns the node with the given ID.
+func (g *Graph) GetNode(id int) *Node {
+	return g.Nodes[id]
 }
 
 // =====================

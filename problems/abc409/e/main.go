@@ -20,34 +20,35 @@ const MOD = 1000000007
 func main() {
 	defer flush()
 	n := ni()
-	g := NewGraph(n + 1)
+	g := NewGraph()
 
 	for i := 1; i <= n; i++ {
 		val := ni()
-		g.CreateNode(i)
-		g.GetNode(i).SetVal(val)
+		g.AddNode(i, val)
 	}
+
 	for i := 0; i < n-1; i++ {
 		u := ni()
 		v := ni()
 		w := ni()
-		g.AppendNext(u, v, w)
-		g.AppendNext(v, u, w)
+		g.AddUndirectedEdge(u, v, w)
 	}
 
 	var ans int64
 	var dfs func(curr, parent int) int
 	dfs = func(curr, parent int) int {
 		node := g.GetNode(curr)
-		total := node.Val
-		for next, weight := range node.Nexts {
-			if next == parent {
+		total := node.Value
+
+		for _, edge := range node.Edges {
+			if edge.To == parent {
 				continue
 			}
-			childTotal := dfs(next, curr)
-			ans += int64(abs(childTotal)) * int64(weight)
+			childTotal := dfs(edge.To, curr)
+			ans += int64(abs(childTotal)) * int64(edge.Weight)
 			total += childTotal
 		}
+
 		return total
 	}
 
@@ -508,49 +509,59 @@ func (v Vector) CrossMagnitude(other Vector) float64 {
 	return math.Abs(float64(v.Cross(other)))
 }
 
-// Graph is generic graph structure
-type Graph struct {
-	Nodes []Node
+// Edge represents a connection from one node to another with an optional weight.
+type Edge struct {
+	To     int
+	Weight int
 }
 
-func NewGraph(size int) *Graph {
-	return &Graph{Nodes: make([]Node, size)}
-}
-
-func (g *Graph) GetNode(i int) *Node {
-	return &g.Nodes[i]
-}
-
-func (g *Graph) CreateNode(i int) {
-	g.Nodes[i] = Node{Nexts: make(map[int]int, 0)}
-}
-
-func (g *Graph) AppendNext(i, next, weight int) {
-	g.Nodes[i].AppendNext(next, weight)
-}
-
-func (g *Graph) SetWeight(u, v, w int) {
-	g.Nodes[u].SetWeight(v, w)
-}
-
+// Node represents a node in the graph with optional value and its outgoing edges.
 type Node struct {
-	Val   int
-	Nexts map[int]int
+	ID    int
+	Value int
+	Edges []Edge
 }
 
-func (n *Node) AppendNext(next, weight int) {
-	if n.Nexts == nil {
-		n.Nexts = make(map[int]int, 0)
+// Graph represents a generic directed or undirected graph.
+type Graph struct {
+	Nodes map[int]*Node
+}
+
+// NewGraph initializes an empty graph.
+func NewGraph() *Graph {
+	return &Graph{
+		Nodes: make(map[int]*Node),
 	}
-	n.Nexts[next] = weight
 }
 
-func (n *Node) SetWeight(v, w int) {
-	n.Nexts[v] = w
+// AddNode adds a new node with the given ID and optional value.
+func (g *Graph) AddNode(id int, value int) {
+	g.Nodes[id] = &Node{
+		ID:    id,
+		Value: value,
+		Edges: []Edge{},
+	}
 }
 
-func (n *Node) SetVal(val int) {
-	n.Val = val
+// AddEdge adds a directed edge from u to v with given weight.
+func (g *Graph) AddEdge(u, v, weight int) {
+	if _, ok := g.Nodes[u]; !ok {
+		g.AddNode(u, 0)
+	}
+	if _, ok := g.Nodes[v]; !ok {
+		g.AddNode(v, 0)
+	}
+	g.Nodes[u].Edges = append(g.Nodes[u].Edges, Edge{To: v, Weight: weight})
+}
+
+func (g *Graph) AddUndirectedEdge(u, v, weight int) {
+	g.AddEdge(u, v, weight)
+	g.AddEdge(v, u, weight)
+}
+
+// GetNode returns the node with the given ID.
+func (g *Graph) GetNode(id int) *Node {
+	return g.Nodes[id]
 }
 
 // =====================
