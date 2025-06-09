@@ -204,18 +204,6 @@ func combMod(n, k int) int {
 	return (fact[n] * invFact[k] % MOD * invFact[n-k] % MOD) % MOD
 }
 
-func powMod(x, e int) int {
-	res := 1
-	for e > 0 {
-		if e%2 == 1 {
-			res = res * x % MOD
-		}
-		x = x * x % MOD
-		e /= 2
-	}
-	return res
-}
-
 // ======================
 // data structure
 // ======================
@@ -727,4 +715,80 @@ func (p Pair[T, U]) Min(other Pair[T, U]) Pair[T, U] {
 // Swap swaps the values of two variables.
 func Swap[T any](a, b *T) {
 	*a, *b = *b, *a
+}
+
+// MOD
+// 基本的なmod演算
+func mod(a int, m ...int) int {
+	modVal := MOD
+	if len(m) > 0 {
+		modVal = m[0]
+	}
+	return ((a % modVal) + modVal) % modVal // 負の数にも対応
+}
+
+// mod加算
+func addMod(a, b int, m ...int) int {
+	modVal := MOD
+	if len(m) > 0 {
+		modVal = m[0]
+	}
+	return (a + b) % modVal
+}
+
+// mod減算
+func subMod(a, b int, m ...int) int {
+	modVal := MOD
+	if len(m) > 0 {
+		modVal = m[0]
+	}
+	return ((a-b)%modVal + modVal) % modVal
+}
+
+// mod乗算
+func mulMod(a, b int, m ...int) int {
+	modVal := MOD
+	if len(m) > 0 {
+		modVal = m[0]
+	}
+	return (a * b) % modVal
+}
+
+// mod累乗 (a^n mod m)
+func powMod(a, n int, m ...int) int {
+	modVal := MOD
+	if len(m) > 0 {
+		modVal = m[0]
+	}
+	if n == 0 {
+		return 1
+	}
+	result := 1
+	a %= modVal
+	for n > 0 {
+		if n&1 == 1 {
+			result = (result * a) % modVal
+		}
+		a = (a * a) % modVal
+		n >>= 1
+	}
+	return result
+}
+
+// modの逆元 (a^(-1) mod m) - mが素数の場合
+func invMod(a int, m ...int) int {
+	modVal := MOD
+	if len(m) > 0 {
+		modVal = m[0]
+	}
+	return powMod(a, modVal-2, modVal) // フェルマーの小定理を利用
+}
+
+// mod除算 (a/b mod m) - mが素数の場合
+func divMod(a, b int, m ...int) int {
+	modVal := MOD
+	if len(m) > 0 {
+		modVal = m[0]
+	}
+	return mulMod(a, invMod(b, modVal), modVal)
 }
