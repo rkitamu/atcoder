@@ -667,48 +667,48 @@ func fibonacci(n int) int {
 // =====================
 // Programming utils
 // ======================
-// Pair is C++のPairっぽいやつ
-// WIP: Number以外(constraints.Ordered にする)
-type Pair[T, U Number] struct {
+// constraints.Ordered
+type Ordered interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+		~float32 | ~float64 |
+		~string
+}
+
+// Pair is like C++'s std::pair
+type Pair[T, U Ordered] struct {
 	First  T
 	Second U
 }
 
-func NewPair[T, U Number](first T, second U) Pair[T, U] {
+func NewPair[T, U Ordered](first T, second U) Pair[T, U] {
 	return Pair[T, U]{First: first, Second: second}
 }
 
-func (p Pair[T, U]) Lt(other Pair[T, U]) bool {
-	if p.First == other.First {
-		return p.Second < other.Second
-	} else {
-		return p.First < other.First
-	}
+func (p Pair[T, U]) Equals(other Pair[T, U]) bool {
+	return p.First == other.First && p.Second == other.Second
 }
 
-func (p Pair[T, U]) Lte(other Pair[T, U]) bool {
-	if p.First == other.First {
-		return p.Second <= other.Second
-	} else {
-		return p.First <= other.First
+func (p Pair[T, U]) Cmp(other Pair[T, U]) int {
+	if p.First < other.First {
+		return -1
 	}
+	if p.First > other.First {
+		return 1
+	}
+	if p.Second < other.Second {
+		return -1
+	}
+	if p.Second > other.Second {
+		return 1
+	}
+	return 0
 }
 
-func (p Pair[T, U]) Gt(other Pair[T, U]) bool {
-	if p.First == other.First {
-		return p.Second > other.Second
-	} else {
-		return p.First > other.First
-	}
-}
-
-func (p Pair[T, U]) Gte(other Pair[T, U]) bool {
-	if p.First == other.First {
-		return p.Second >= other.Second
-	} else {
-		return p.First >= other.First
-	}
-}
+func (p Pair[T, U]) Lt(other Pair[T, U]) bool  { return p.Cmp(other) < 0 }
+func (p Pair[T, U]) Lte(other Pair[T, U]) bool { return p.Cmp(other) <= 0 }
+func (p Pair[T, U]) Gt(other Pair[T, U]) bool  { return p.Cmp(other) > 0 }
+func (p Pair[T, U]) Gte(other Pair[T, U]) bool { return p.Cmp(other) >= 0 }
 
 func (p Pair[T, U]) Max(other Pair[T, U]) Pair[T, U] {
 	if p.Lt(other) {
