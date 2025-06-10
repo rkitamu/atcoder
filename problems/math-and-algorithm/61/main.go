@@ -19,6 +19,28 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+
+	n := nl()
+
+	// 2^k-1 であれば先手が負ける
+	// log_10 2 = 0.301...
+	// log_10 10^18 = 18
+	// 18 / 0.301... = 60?
+	for i := 1; i < 60; i++ {
+		if n == int64(math.Pow(float64(2), float64(i)))-1 {
+			out("Second")
+			return
+		}
+	}
+	out("First")
+}
+func nl() int64 {
+	sc.Scan()
+	i, e := strconv.ParseInt(sc.Text(), 10, 64)
+	if e != nil {
+		panic(e)
+	}
+	return i
 }
 
 // =====================
@@ -49,15 +71,6 @@ func nis(n int) []int {
 		a[i] = ni()
 	}
 	return a
-}
-
-func nl() int64 {
-	sc.Scan()
-	i, e := strconv.ParseInt(sc.Text(), 10, 64)
-	if e != nil {
-		panic(e)
-	}
-	return i
 }
 
 var bufBytes []byte
