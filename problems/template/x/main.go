@@ -955,3 +955,13 @@ func divMod(a, b int, m ...int) int {
 	}
 	return mulMod(a, invMod(b, modVal), modVal)
 }
+
+// ビット数を数える
+func popcount(x int) int {
+	count := 0
+	for x > 0 {
+		count += x & 1
+		x >>= 1
+	}
+	return count
+}
