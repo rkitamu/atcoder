@@ -565,7 +565,7 @@ func isPrime(n int) bool {
 }
 
 // gcd calculates the greatest common divisor of a and b
-func gcd(a, b int) int {
+func gcd[T Integer](a, b T) T {
 	if a < b {
 		a, b = b, a
 	}
@@ -583,7 +583,7 @@ func gcd(a, b int) int {
 }
 
 // gcds calculates the greatest common divisor of a slice of integers
-func gcds(a ...int) int {
+func gcds[T Integer](a ...T) T {
 	if len(a) < 2 {
 		panic("gcds: at least 2 arguments required")
 	}
@@ -595,14 +595,14 @@ func gcds(a ...int) int {
 }
 
 // lcm calculates the least common multiple of a and b
-func lcm(a, b int) int {
+func lcm[T Integer](a, b T) T {
 	if a < b {
 		a, b = b, a
 	}
 	return a / gcd(a, b) * b
 }
 
-func lcms(a ...int) int {
+func lcms[T Integer](a ...T) T {
 	if len(a) < 2 {
 		panic("lcms: at least 2 arguments required")
 	}
