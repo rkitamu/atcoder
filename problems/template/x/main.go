@@ -160,6 +160,22 @@ func out(v ...interface{}) {
 	}
 }
 
+func out1dNumber[T Number](v []T) {
+	for i, val := range v {
+		if i > 0 {
+			fmt.Fprint(wtr, " ")
+		}
+		fmt.Fprint(wtr, val)
+	}
+	fmt.Fprintln(wtr)
+}
+
+func out2dNumber[T Number](v [][]T) {
+	for _, i := range v {
+		out1dNumber(i)
+	}
+}
+
 // outr2d writes a 2D slice of runes to stdout.
 func outr2d(a [][]rune) {
 	for _, r := range a {
