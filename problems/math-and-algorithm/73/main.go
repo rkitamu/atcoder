@@ -19,6 +19,17 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+	ans := int64(0)
+	pow2 := int64(1)
+	
+	for i := 0; i < n; i++ {
+		tmp := (int64(a[i]) * pow2) % MOD
+		ans = (ans + tmp) % MOD
+		pow2 = (pow2 * 2) % MOD
+	}
+	out(ans)
 }
 
 // =====================
