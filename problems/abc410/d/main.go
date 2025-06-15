@@ -17,15 +17,88 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+*
+1. id, xorした時の状態を頂点としたグラフを作成する
+2. DFSで探索、未知のid,xorで踏んだ場合は頂点を増やす, 探索済みの組み合わせならば無視
+3. goalのidでxorが最も小さい頂点を探す -> TLEしそうだけど祈る
+*/
 func main() {
 	defer flush()
-	// n, m := ni(), ni()
-	// g := NewGraph()
-	// for i := 0; i < m; i++ {
-	// 	u, v, w := ni(), ni(), ni()
-	// 	g.AddEdge(u, v, w)
-	// }
+	numVertices, numEdges := ni(), ni()
+	
+	// グラフ構築
+	graph := NewGraph()
+	for i := 0; i < numEdges; i++ {
+		from, to, weight := ni(), ni(), ni()
+		graph.AddEdge(from, to, weight)
+	}
 
+	// 拡張ダイクストラの状態：(頂点ID, XOR累積値)
+	type State struct {
+		vertexID     int
+		xorAccumulated int
+	}
+	
+	// 探索済み状態の管理
+	visitedStates := make(map[State]bool)
+	
+	// ゴール頂点での各XOR値の到達可能性
+	const MAX_XOR_VALUE = 1 << 10  // 2^10 = 1024
+	reachableXorAtGoal := make([]bool, MAX_XOR_VALUE)
+	
+	goalVertex := numVertices
+
+	// 拡張DFS：状態(頂点, XOR累積値)で探索
+	var extendedDFS func(currentVertex, currentXor int)
+	extendedDFS = func(currentVertex, currentXor int) {
+		if graph.GetNode(currentVertex) == nil {
+			return
+		}
+		adjacentEdges := graph.GetNode(currentVertex).Edges
+		
+		for _, edge := range adjacentEdges {
+			nextVertex := edge.To
+			nextXor := currentXor ^ edge.Weight
+			
+			nextState := State{
+				vertexID:       nextVertex,
+				xorAccumulated: nextXor,
+			}
+			
+			// 既に探索済みの状態なら、この辺をスキップ
+			if visitedStates[nextState] {
+				continue
+			}
+			
+			// 新しい状態として記録
+			visitedStates[nextState] = true
+			
+			// ゴール到達時の処理
+			if nextVertex == goalVertex {
+				reachableXorAtGoal[nextXor] = true
+			}
+			
+			// 再帰的に探索継続
+			extendedDFS(nextVertex, nextXor)
+		}
+	}
+
+	// 開始頂点1、初期XOR値0で探索開始
+	startVertex := 1
+	initialXor := 0
+	extendedDFS(startVertex, initialXor)
+
+	// ゴールでの最小XOR値を探索
+	for xorValue := 0; xorValue < len(reachableXorAtGoal); xorValue++ {
+		if reachableXorAtGoal[xorValue] {
+			out(xorValue)
+			return
+		}
+	}
+
+	// 到達不可能な場合
+	out(-1)
 }
 
 // =====================
