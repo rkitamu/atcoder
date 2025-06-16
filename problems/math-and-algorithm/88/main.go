@@ -20,10 +20,10 @@ const MOD = 998244353
 func main() {
 	defer flush()
 	a, b, c := ni(), ni(), ni()
-	S := divMod(mulMod(1 + a, a), 2)
-	bai := divMod(mulMod(b, b + 1), 2)
+	S := divMod(mulMod(1+a, a), 2)
+	bai := divMod(mulMod(b, b+1), 2)
 	T := mulMod(S, bai)
-	bai2 := divMod(mulMod(c, c + 1), 2)
+	bai2 := divMod(mulMod(c, c+1), 2)
 	U := mulMod(T, bai2)
 	out(U)
 }
