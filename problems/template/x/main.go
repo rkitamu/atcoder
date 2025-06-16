@@ -668,6 +668,21 @@ func abs[T Number](a T) T {
 	return a
 }
 
+func pow[T Integer](base, exp T) T {
+	if exp == 0 {
+		return 1
+	}
+	if exp == 1 {
+		return base
+	}
+
+	result := T(1)
+	for i := T(0); i < exp; i++ {
+		result *= base
+	}
+	return result
+}
+
 func fibonacci(n int) int {
 	if n < 0 {
 		panic("fibonacci: n must be non-negative")
