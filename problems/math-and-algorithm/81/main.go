@@ -21,18 +21,12 @@ func main() {
 	defer flush()
 	n := ni()
 	ans := 0
-	for n >= 10000 {
-		n -= 10000
-		ans++
-	}
-	for n >= 5000 {
-		n -= 5000
-		ans++
-	}
-	for n > 0 {
-		n -= 1000
-		ans++
-	}
+	ans += n / 10000
+	n = n % 10000
+	ans += n / 5000
+	n = n % 5000
+	ans += n / 1000
+	n = n % 1000
 	out(ans)
 }
 
