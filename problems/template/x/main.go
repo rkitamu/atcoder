@@ -394,8 +394,8 @@ type Queue[T any] struct {
 	tail int
 }
 
-func NewQueue[T any](size int) *Queue[T] {
-	return &Queue[T]{data: make([]T, size), head: 0, tail: 0}
+func NewQueue[T any]() *Queue[T] {
+	return &Queue[T]{data: make([]T, 0), head: 0, tail: 0}
 }
 func (q *Queue[T]) Enqueue(v T) {
 	q.data = append(q.data, v)

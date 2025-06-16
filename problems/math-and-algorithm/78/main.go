@@ -20,7 +20,81 @@ const MOD = 1000000007
 func main() {
 	defer flush()
 	n, m := ni(), ni()
+	g := NewGraph()
+	for i := 1; i <= n; i++ {
+		g.AddNode(i, 0) // すべてのノードを事前作成
+	}
+	for i := 0; i < m; i++ {
+		a, b := ni(), ni()
+		g.AddUndirectedEdge(a, b, 1)
+	}
 
+	visited := make([]bool, n+1)
+
+	var bfs func(id, age int)
+	bfs = func(id, age int) {
+		queue := NewQueue[[]int]()
+		queue.Enqueue([]int{id, age})
+		for queue.Len() > 0 {
+			cur := queue.Dequeue()
+			if visited[cur[0]] {
+				continue
+			}
+
+			visited[cur[0]] = true
+			g.GetNode(cur[0]).Value = min(max(cur[1], 0), 120)
+
+			for _, edge := range g.GetNode(cur[0]).Edges {
+				if !visited[edge.To] {
+					queue.Enqueue([]int{edge.To, cur[1] + 1})
+				}
+			}
+		}
+	}
+
+	// 人1を含む連結成分かどうか確認
+	person1Connected := make([]bool, n+1)
+	if g.GetNode(1) != nil {
+		// 人1から到達可能なノードをマーク
+		queue := NewQueue[int]()
+		queue.Enqueue(1)
+		tempVisited := make([]bool, n+1)
+		tempVisited[1] = true
+		person1Connected[1] = true
+
+		for queue.Len() > 0 {
+			cur := queue.Dequeue()
+			for _, edge := range g.GetNode(cur).Edges {
+				if !tempVisited[edge.To] {
+					tempVisited[edge.To] = true
+					person1Connected[edge.To] = true
+					queue.Enqueue(edge.To)
+				}
+			}
+		}
+	}
+
+	// 各連結成分をBFS
+	for i := 1; i <= n; i++ {
+		if !visited[i] {
+			if person1Connected[i] {
+				// 人1を含む連結成分：0歳から開始
+				bfs(i, 0)
+			} else {
+				// 人1を含まない連結成分：120歳から開始
+				bfs(i, 120)
+			}
+		}
+	}
+
+	for i := 1; i <= n; i++ {
+		node := g.GetNode(i)
+		if node == nil {
+			out(120)
+			continue
+		}
+		out(node.Value)
+	}
 }
 
 // =====================
@@ -396,8 +470,8 @@ type Queue[T any] struct {
 	tail int
 }
 
-func NewQueue[T any](size int) *Queue[T] {
-	return &Queue[T]{data: make([]T, size), head: 0, tail: 0}
+func NewQueue[T any]() *Queue[T] {
+	return &Queue[T]{data: make([]T, 0), head: 0, tail: 0}
 }
 func (q *Queue[T]) Enqueue(v T) {
 	q.data = append(q.data, v)
