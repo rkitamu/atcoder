@@ -19,6 +19,21 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	s := nrs(n)
+	depth := 0
+	for i := 0; i < n; i++ {
+		if s[i] == '(' {
+			depth++
+		} else if s[i] == ')' {
+			depth--
+		}
+		if depth < 0 {
+			out("No")
+			return
+		}
+	}
+	out("Yes")
 }
 
 // =====================

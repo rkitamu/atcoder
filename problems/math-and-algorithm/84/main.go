@@ -19,6 +19,18 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	a, b, c := ni(), ni(), ni()
+	tmp := c - a - b
+	if tmp < 0 {
+		out("No")
+		return
+	}
+
+	if 4*a*b < pow(tmp, 2) {
+		out("Yes")
+	} else {
+		out("No")
+	}
 }
 
 // =====================

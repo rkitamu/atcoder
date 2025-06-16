@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
 	// "container/heap"
 )
@@ -19,6 +20,21 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+	b := nis(n)
+	sort.Slice(a, func(i, j int) bool {
+		return a[i] < a[j]
+	})
+	sort.Slice(b, func(i, j int) bool {
+		return b[i] < b[j]
+	})
+
+	ans := 0
+	for i := 0; i < n; i++ {
+		ans += abs(a[i] - b[i])
+	}
+	out(ans)
 }
 
 // =====================
@@ -666,21 +682,6 @@ func abs[T Number](a T) T {
 		return -a
 	}
 	return a
-}
-
-func pow[T Integer](base, exp T) T {
-	if exp == 0 {
-		return 1
-	}
-	if exp == 1 {
-		return base
-	}
-
-	result := T(1)
-	for i := T(0); i < exp; i++ {
-		result *= base
-	}
-	return result
 }
 
 func fibonacci(n int) int {

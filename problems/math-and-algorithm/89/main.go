@@ -18,7 +18,30 @@ const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
 func main() {
-	defer flush()
+    defer flush()
+    a, b, c := nl(), nl(), nl()
+    
+    if c == 1 {
+        out("No")
+        return
+    }
+    
+    v := int64(1)
+    for i := int64(1); i <= b; i++ {
+        if a/c < v {
+            out("Yes")
+            return
+        }
+        
+        // オーバーフロー検出
+        if v > math.MaxInt64/c {
+            // v * c がオーバーフローする = c^b が非常に大きい
+            out("No")  // もうa < c^bにはならない
+            return
+        }
+        v *= c
+    }
+    out("No")
 }
 
 // =====================

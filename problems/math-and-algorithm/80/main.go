@@ -2,11 +2,11 @@ package main
 
 import (
 	"bufio"
+	"container/heap"
 	"fmt"
 	"math"
 	"os"
 	"strconv"
-	// "container/heap"
 )
 
 func init() {
@@ -17,8 +17,51 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+*
+1. 重みつき無向グラフを作れば1->nまでの最大コストを求めればよい -> ほんとか？
+絶対値入れ替えても結果同じだし良い気がする
+2. nに辿りつけない場合、nに制約はないのでいくらでも大きくできる(-1)
+*/
 func main() {
 	defer flush()
+	n, m := ni(), ni()
+	g := NewGraph()
+	// 全部の辺を追加
+	for i := 0; i < m; i++ {
+		a, b, c := ni(), ni(), ni()
+		g.AddUndirectedEdge(a, b, c)
+	}
+	// 全部のノードを追加
+	for i := 1; i <= n; i++ {
+		if _, ok := g.Nodes[i]; !ok {
+			g.AddNode(i, -1)
+		}
+	}
+
+	// 1からnまでの最大コストを求める
+	h := &ItemHeap{}
+	costFixed := make(map[int]bool)
+	heap.Init(h)
+	heap.Push(h, &Item{id: 1, value: 0})
+	for h.Len() > 0 {
+		cur := heap.Pop(h).(*Item)
+		if costFixed[cur.id] {
+			continue
+		}
+		g.GetNode(cur.id).Value = cur.value
+		costFixed[cur.id] = true
+		for _, edge := range g.GetNode(cur.id).Edges {
+			if costFixed[edge.To] {
+				continue
+			}
+			nextID := edge.To
+			nextValue := cur.value + edge.Weight
+			heap.Push(h, &Item{id: nextID, value: nextValue})
+		}
+	}
+
+	out(g.GetNode(n).Value) // nに到達するまでの最小コストを出力
 }
 
 // =====================
@@ -436,6 +479,7 @@ func (q *Queue[T]) Top() T {
 //	heap.Push(h, &Item{value: tc.tcase[i]})
 //	heap.Pop(h).(*Item)
 type Item struct {
+	id    int
 	value int
 }
 type ItemHeap []*Item
@@ -666,21 +710,6 @@ func abs[T Number](a T) T {
 		return -a
 	}
 	return a
-}
-
-func pow[T Integer](base, exp T) T {
-	if exp == 0 {
-		return 1
-	}
-	if exp == 1 {
-		return base
-	}
-
-	result := T(1)
-	for i := T(0); i < exp; i++ {
-		result *= base
-	}
-	return result
 }
 
 func fibonacci(n int) int {

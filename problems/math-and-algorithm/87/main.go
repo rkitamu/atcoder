@@ -19,6 +19,11 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	S := divMod((((1 + n) * n) % MOD), 2)
+	bai := divMod(mulMod(n, (n+1)), 2)
+	ans := mulMod(bai, S)
+	out(ans)
 }
 
 // =====================

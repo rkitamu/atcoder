@@ -19,6 +19,20 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n, x, y := ni(), ni(), ni()
+	for i := 1; i <= n; i++ {
+		for j := i; j <= n; j++ {
+			for k := j; k <= n; k++ {
+				for l := k; l <= n; l++ {
+					if i+j+k+l == x && i*j*k*l == y {
+						out("Yes")
+						return
+					}
+				}
+			}
+		}
+	}
+	out("No")
 }
 
 // =====================

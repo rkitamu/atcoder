@@ -19,6 +19,15 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	ans := 0
+	ans += n / 10000
+	n = n % 10000
+	ans += n / 5000
+	n = n % 5000
+	ans += n / 1000
+	n = n % 1000
+	out(ans)
 }
 
 // =====================
@@ -666,21 +675,6 @@ func abs[T Number](a T) T {
 		return -a
 	}
 	return a
-}
-
-func pow[T Integer](base, exp T) T {
-	if exp == 0 {
-		return 1
-	}
-	if exp == 1 {
-		return base
-	}
-
-	result := T(1)
-	for i := T(0); i < exp; i++ {
-		result *= base
-	}
-	return result
 }
 
 func fibonacci(n int) int {
