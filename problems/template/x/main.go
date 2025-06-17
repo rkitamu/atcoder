@@ -246,10 +246,12 @@ type BIT struct {
 	bit []int
 }
 
+// NewBIT initializes a new Binary Indexed Tree with size n
 func NewBIT(n int) *BIT {
 	return &BIT{n: n + 2, bit: make([]int, n+3)}
 }
 
+// Add x to index i (O(log n))
 func (b *BIT) Add(i, x int) {
 	i++
 	for i < len(b.bit) {
@@ -258,6 +260,7 @@ func (b *BIT) Add(i, x int) {
 	}
 }
 
+// Sum returns the [0, i] (inclusive) sum (O(log n))
 func (b *BIT) Sum(i int) int {
 	i++
 	res := 0
@@ -266,6 +269,17 @@ func (b *BIT) Sum(i int) int {
 		i -= i & -i
 	}
 	return res
+}
+
+// RangeSum returns the sum of the range [l, r] (inclusive) (O(log n))
+func (b *BIT) RangeSum(l, r int) int {
+	if l > r {
+		return 0
+	}
+	if l == 0 {
+		return b.Sum(r)
+	}
+	return b.Sum(r) - b.Sum(l-1)
 }
 
 // SegmentTree (WIP(Implemented: push, add, get, sum))
