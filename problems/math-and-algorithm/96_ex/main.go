@@ -19,6 +19,29 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	var n int
+	fmt.Scan(&n)
+	ar := make([]int, n)
+	sum := 0
+	for i := range ar {
+		fmt.Scan(&ar[i])
+		sum += ar[i]
+	}
+	bn := (sum + 1) / 2
+	dp := [100001]bool{}
+	dp[0] = true
+	ans := 100000
+	for i := range ar {
+		for j := len(dp) - 1; j >= ar[i]; j-- {
+			if dp[j-ar[i]] {
+				dp[j] = true
+				if bn <= j && j < ans {
+					ans = j
+				}
+			}
+		}
+	}
+	fmt.Println(ans)
 }
 
 // =====================

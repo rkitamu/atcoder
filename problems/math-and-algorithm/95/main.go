@@ -17,8 +17,34 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+愚直にやるとO(NQ) 1 <= N, Q <= 10^5 で間に合わない
+BITをクラス毎に用意し各クエリに対してO(log N) で計算できるようにしておく。
+計算量はO((N + Q) log N) で間に合う。
+*/
 func main() {
 	defer flush()
+	n := ni()
+	bit1 := NewBIT(n)
+	bit2 := NewBIT(n)
+	for i := 0; i < n; i++ {
+		c, p := ni(), ni()
+		if c == 1 {
+			bit1.Add(i, p)
+		} else {
+			bit2.Add(i, p)
+		}
+	}
+
+	q := ni()
+	for i := 0; i < q; i++ {
+		l, r := ni(), ni()
+		l--
+		r--
+		class1Score := bit1.RangeSum(l, r)
+		class2Score := bit2.RangeSum(l, r)
+		out(class1Score, class2Score)
+	}
 }
 
 // =====================

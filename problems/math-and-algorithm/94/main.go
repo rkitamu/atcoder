@@ -17,8 +17,27 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+B_i >= max(A_i, A_{i+1}) であることから、
+A_{i+1}の値はmin(B_i, B_{i+1}) である。
+A_NがB_N-1で確定するため、降順で見ていくとやりやすいかも
+*/
 func main() {
 	defer flush()
+	n := ni()
+	b := nis(n-1)
+	sum := b[n-2]
+	for i := n-2; i >= 0; i-- {
+		pre := math.MaxInt32
+		if i == 0 {
+			pre = b[i]
+		} else {
+			pre = b[i-1]
+		}
+		a_i := min(b[i], pre)
+		sum += a_i
+	}
+	out(sum)
 }
 
 // =====================
@@ -246,12 +265,10 @@ type BIT struct {
 	bit []int
 }
 
-// NewBIT initializes a new Binary Indexed Tree with size n
 func NewBIT(n int) *BIT {
 	return &BIT{n: n + 2, bit: make([]int, n+3)}
 }
 
-// Add x to index i (O(log n))
 func (b *BIT) Add(i, x int) {
 	i++
 	for i < len(b.bit) {
@@ -260,7 +277,6 @@ func (b *BIT) Add(i, x int) {
 	}
 }
 
-// Sum returns the [0, i] (inclusive) sum (O(log n))
 func (b *BIT) Sum(i int) int {
 	i++
 	res := 0
@@ -269,17 +285,6 @@ func (b *BIT) Sum(i int) int {
 		i -= i & -i
 	}
 	return res
-}
-
-// RangeSum returns the sum of the range [l, r] (inclusive) (O(log n))
-func (b *BIT) RangeSum(l, r int) int {
-	if l > r {
-		return 0
-	}
-	if l == 0 {
-		return b.Sum(r)
-	}
-	return b.Sum(r) - b.Sum(l-1)
 }
 
 // SegmentTree (WIP(Implemented: push, add, get, sum))

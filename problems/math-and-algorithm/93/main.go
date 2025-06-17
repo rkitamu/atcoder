@@ -17,8 +17,26 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+a/g * b > 10^18
+これをうまく計算する前に10^18を超えるか判定したい
+
+両辺をbで割ると、不等式が成り立ったまま、数値が減る操作しかしないため、
+10^18越えの判定をオーバーフローの心配なくできる。
+
+後続の計算も10^18以下であることが保証されるため、a/g * bの計算も安全に行える。
+*/
 func main() {
 	defer flush()
+	a, b := nl(), nl()
+	g := gcd(a, b)
+
+	if a/g > 1e18/b {
+		out("Large")
+	} else {
+		c := a / g * b
+		out(c)
+	}
 }
 
 // =====================
@@ -246,12 +264,10 @@ type BIT struct {
 	bit []int
 }
 
-// NewBIT initializes a new Binary Indexed Tree with size n
 func NewBIT(n int) *BIT {
 	return &BIT{n: n + 2, bit: make([]int, n+3)}
 }
 
-// Add x to index i (O(log n))
 func (b *BIT) Add(i, x int) {
 	i++
 	for i < len(b.bit) {
@@ -260,7 +276,6 @@ func (b *BIT) Add(i, x int) {
 	}
 }
 
-// Sum returns the [0, i] (inclusive) sum (O(log n))
 func (b *BIT) Sum(i int) int {
 	i++
 	res := 0
@@ -269,17 +284,6 @@ func (b *BIT) Sum(i int) int {
 		i -= i & -i
 	}
 	return res
-}
-
-// RangeSum returns the sum of the range [l, r] (inclusive) (O(log n))
-func (b *BIT) RangeSum(l, r int) int {
-	if l > r {
-		return 0
-	}
-	if l == 0 {
-		return b.Sum(r)
-	}
-	return b.Sum(r) - b.Sum(l-1)
 }
 
 // SegmentTree (WIP(Implemented: push, add, get, sum))

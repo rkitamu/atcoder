@@ -17,8 +17,26 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+多分時間のかかる順にソートして余裕のあるオーブンの方に入れておけばいいと思う
+[4 4 1 1 1][2 2 2 3 3] とかの時にだめっぽい
+
+オーブンに均等に入れていってmax(o1, o2)をとるというものなので、
+下限lbはceil(tの合計/2)になる。
+lbに最も近いT_iの合計を求めるのが良さそう、これをdpで求める
+
+料理iまで考えた時の最も{1, 2..., lb}[i]に近いdp[i][j]を求める。
+dp[i][j] = closest(j, dp[i-1][j], dp[i-1][j]+T[i])
+*/
 func main() {
 	defer flush()
+	n := ni()
+	t := nis(n)
+	sum := 0
+	for _, v := range t {
+		sum += v
+	}
+
 }
 
 // =====================

@@ -17,8 +17,28 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+N = xy について、xまたはyはNの約数である。
+Nの約数の最大値はsqrt(N)のため、
+1からsqrt(N)までの整数x'について、n mod x' = 0ならば、yの値はN/x'となる。
+N = xyとなる整数ペア(x, y)が判明するため、問題文のルールに従い、最小値を求める。
+計算量はO(sqrt(N))のため、sqrt(10^12) = 10^6のため、十分高速である。
+
+問題例からsqrt(N)に最も近いxが最適っぽいので、
+全部調べる必要はない気がするけどわからんので全部見てる。
+*/
 func main() {
 	defer flush()
+	n := nl()
+	ans := int64(math.MaxInt64)
+	sqrtN := int64(math.Sqrt(float64(n)))
+	for x := sqrtN; x >= 1; x-- {
+		if n%x == 0 {
+			y := n / x
+			ans = min(ans, 2*x+2*y)
+		}
+	}
+	out(ans)
 }
 
 // =====================
@@ -246,12 +266,10 @@ type BIT struct {
 	bit []int
 }
 
-// NewBIT initializes a new Binary Indexed Tree with size n
 func NewBIT(n int) *BIT {
 	return &BIT{n: n + 2, bit: make([]int, n+3)}
 }
 
-// Add x to index i (O(log n))
 func (b *BIT) Add(i, x int) {
 	i++
 	for i < len(b.bit) {
@@ -260,7 +278,6 @@ func (b *BIT) Add(i, x int) {
 	}
 }
 
-// Sum returns the [0, i] (inclusive) sum (O(log n))
 func (b *BIT) Sum(i int) int {
 	i++
 	res := 0
@@ -269,17 +286,6 @@ func (b *BIT) Sum(i int) int {
 		i -= i & -i
 	}
 	return res
-}
-
-// RangeSum returns the sum of the range [l, r] (inclusive) (O(log n))
-func (b *BIT) RangeSum(l, r int) int {
-	if l > r {
-		return 0
-	}
-	if l == 0 {
-		return b.Sum(r)
-	}
-	return b.Sum(r) - b.Sum(l-1)
 }
 
 // SegmentTree (WIP(Implemented: push, add, get, sum))
