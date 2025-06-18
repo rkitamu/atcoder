@@ -42,19 +42,25 @@ func ni() int {
 	return i
 }
 
-// ni reads n integers from stdin.
-func nis(n int) []int {
-	a := make([]int, n)
-	for i := 0; i < n; i++ {
+// nis reads n integers from stdin with optional offset.
+func nis(n int, offset ...int) []int {
+	off := 0
+	if len(offset) > 0 {
+		off = offset[0]
+	}
+
+	a := make([]int, n+off)
+	for i := off; i < n+off; i++ {
 		a[i] = ni()
 	}
 	return a
 }
 
+// nis2d reads n * m integers from stdin with offset support.
 func nis2d(h, w, offset int) [][]int {
 	a := make([][]int, h+offset)
 	for i := offset; i < h+offset; i++ {
-		a[i+offset] = nis(w)
+		a[i] = nis(w, offset)
 	}
 	return a
 }
