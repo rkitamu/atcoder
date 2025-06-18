@@ -17,8 +17,46 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+LCS
+
+*/
 func main() {
 	defer flush()
+	s, t := ns(), ns()
+	dp := make([][]int, len(s)+1)
+	for i := range dp {
+		dp[i] = make([]int, len(t)+1)
+	}
+
+	for i := 1; i <= len(s); i++ {
+		for j := 1; j <= len(t); j++ {
+			if s[i-1] == t[j-1] {
+				dp[i][j] = dp[i-1][j-1] + 1
+			} else {
+				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+			}
+		}
+	}
+
+	result := make([]byte, 0)
+	i, j := len(s), len(t)
+	for i > 0 && j > 0 {
+		if s[i-1] == t[j-1] {
+			result = append(result, s[i-1])
+			i--
+			j--
+		} else if dp[i-1][j] >= dp[i][j-1] {
+			i--
+		} else {
+			j--
+		}
+	}
+	rev := make([]byte, len(result))
+	for k := len(result) - 1; k >= 0; k-- {
+		rev[k] = result[len(result)-1-k]
+	}
+	out(string(rev))
 }
 
 // =====================
@@ -198,6 +236,15 @@ func outr2d(a [][]rune) {
 			panic(e)
 		}
 	}
+}
+
+// print2D prints a 2D slice in a readable format
+func DebugPrint2D[T any](arr [][]T) {
+	fmt.Println("[")
+	for _, row := range arr {
+		fmt.Printf("%v,\n", row)
+	}
+	fmt.Println("]")
 }
 
 // ======================

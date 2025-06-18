@@ -17,8 +17,53 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+*
+価値が最大になるようにN個の品物を選ぶ
+N <= 100, v_i <= 10^3 なので、価値の最大値は10^5
+dp[i][j] := i番目までの品物を選んで、価値がj以上になるように選んだ時の最小の重さ
+dp[i][j]でループしてW以下を満たすjの最大が答え
+*/
 func main() {
 	defer flush()
+	n, w := ni(), ni()
+	wvs := nis2d(n, 2, 0)
+	maxValue := 0
+	for _, wv := range wvs {
+		maxValue += wv[1]
+	}
+
+	dp := make([][]int, n+1)
+	for i := 0; i <= n; i++ {
+		dp[i] = make([]int, maxValue+1)
+		for j := 0; j <= maxValue; j++ {
+			dp[i][j] = math.MaxInt32
+		}
+	}
+
+	// i番目までの品物を選ぶ
+	for i := 1; i <= n; i++ {
+		weight, value := wvs[i-1][0], wvs[i-1][1]
+		// 価値j以上になるか
+		for j := 1; j <= maxValue; j++ {
+			if j <= value {
+				dp[i][j] = min(dp[i-1][j], weight)
+			} else {
+				dp[i][j] = min(dp[i-1][j-value]+weight, dp[i-1][j])
+			}
+		}
+	}
+
+	possibleMaxValue := 0
+	for i := 1; i <= n; i++ {
+		for j := 1; j <= maxValue; j++ {
+			if dp[i][j] <= w {
+				possibleMaxValue = max(possibleMaxValue, j)
+			}
+		}
+	}
+
+	out(possibleMaxValue)
 }
 
 // =====================

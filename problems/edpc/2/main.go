@@ -17,8 +17,27 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+h(n) bt [1, 10^5] (2 <= n <= 10^5)
+
+	dp(n) = {
+	  0, (n == 1)
+	  min_{max(1, n-k) <= j <= n-1} dp(j) + |h(n) - h(j)| (2 <= n)
+	} (1 <= k <= n-1 <= 10^5))
+*/
 func main() {
 	defer flush()
+	n, k := ni(), ni()
+	h := nis(n, 1)
+
+	dp := make([]int, n+1)
+	for i := 2; i <= n; i++ {
+		dp[i] = math.MaxInt32
+		for j := max(1, i-k); j <= i-1; j++ {
+			dp[i] = min(dp[i], dp[j]+abs(h[i]-h[j]))
+		}
+	}
+	out(dp[n])
 }
 
 // =====================

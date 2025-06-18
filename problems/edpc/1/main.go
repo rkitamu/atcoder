@@ -17,8 +17,30 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+	dp(n) = {
+	  0, (n = 1)
+	  |h(1) - h(2)|, (n = 2)
+	  min(dp(n-1)+|h(n-1) - h(n)|, dp(n-2)+|h(n-2) - h(n)|), (n >= 3)
+	} (1 <= n <= 10^5)
+
+ans = dp(n)
+*/
 func main() {
 	defer flush()
+	n := ni()
+	h := nis(n, 1)
+	dp := make([]int, n+1)
+
+	// dp s
+	dp[1] = 0
+	dp[2] = abs(h[1] - h[2])
+	for i := 3; i <= n; i++ {
+		dp[i] = min(dp[i-1]+abs(h[i-1]-h[i]), dp[i-2]+abs(h[i-2]-h[i]))
+	}
+	// dp e
+
+	out(dp[n])
 }
 
 // =====================

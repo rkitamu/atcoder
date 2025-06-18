@@ -17,8 +17,25 @@ func init() {
 const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
+/*
+1日前の行動で、現在の行動以外を選択する場合の最大値を求めるDP
+行動の種類は3種類あるので3N (O(N))で解ける
+*/
 func main() {
 	defer flush()
+	n := ni()
+	abces := nis2d(n, 3, 0)
+
+	dp := make([][]int, n+1)
+	dp[0] = make([]int, 3)
+	for i := 1; i <= n; i++ {
+		dp[i] = make([]int, 3)
+		dp[i][0] = max(dp[i-1][1], dp[i-1][2]) + abces[i-1][0] // aを選ぶ
+		dp[i][1] = max(dp[i-1][0], dp[i-1][2]) + abces[i-1][1] // bを選ぶ
+		dp[i][2] = max(dp[i-1][0], dp[i-1][1]) + abces[i-1][2] // cを選ぶ
+	}
+
+	out(max(max(dp[n][0], dp[n][1]), dp[n][2]))
 }
 
 // =====================
