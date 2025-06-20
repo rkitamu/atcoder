@@ -174,6 +174,14 @@ func out(v ...interface{}) {
 	}
 }
 
+// out writes the output to stdout without a newLine.
+func outNoLn(v ...interface{}) {
+	_, e := fmt.Fprint(wtr, v...)
+	if e != nil {
+		panic(e)
+	}
+}
+
 func out1dNumber[T Number](v []T) {
 	for i, val := range v {
 		if i > 0 {
