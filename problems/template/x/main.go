@@ -59,6 +59,11 @@ func nis(n int, offset ...int) []int {
 // nis2d reads n * m integers from stdin with offset support.
 func nis2d(h, w, offset int) [][]int {
 	a := make([][]int, h+offset)
+	// offset
+	for i := 0; i < offset; i++ {
+		a[i] = make([]int, w+offset)
+	}
+	// content
 	for i := offset; i < h+offset; i++ {
 		a[i] = nis(w, offset)
 	}
