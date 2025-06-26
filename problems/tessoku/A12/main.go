@@ -21,32 +21,22 @@ func main() {
 	defer flush()
 	n, k := ni(), ni()
 	a := nis(n)
-	l := 0
+	l := 1
 	r := 10 * 10 * 10 * 10 * 10 * 10 * 10 * 10 * 10 // 10^9
 	m := 0
-	toggle := false
-	for l <= r {
+	for l < r {
 		m = (l + r) / 2
 		sum := 0
 		for i := 0; i < n; i++ {
 			sum += m / a[i]
 		}
-		if sum > k {
-			r = m - 1
-			toggle = true
+		if sum >= k {
+			r = m
 		} else if sum < k {
 			l = m + 1
-			toggle = false
-		} else {
-			out(m)
-			return
 		}
 	}
-	if toggle {
-		out(m)
-	} else {
-		out(m+1)
-	}
+	out(l)
 }
 
 // =====================
