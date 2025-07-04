@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
 	// "container/heap"
 )
@@ -21,6 +22,35 @@ func main() {
 	defer flush()
 	n := ni()
 	a := nis(n)
+
+	idxes := make(map[int][]int)
+	ans := make([]int, n)
+
+	for i := 0; i < n; i++ {
+		if idxes[a[i]] == nil {
+			idxes[a[i]] = make([]int, 0)
+		}
+		idxes[a[i]] = append(idxes[a[i]], i)
+	}
+
+	sort.Slice(a, func(i, j int) bool {
+		return a[i] < a[j]
+	})
+
+	cnt := 1
+	b := -1
+	for i := 0; i < n; i++ {
+		if b != a[i] {
+			idx := idxes[a[i]]
+			for _, v := range idx {
+				ans[v] = cnt
+			}
+			b = a[i]
+			cnt++
+		}
+	}
+
+	out1dNumber(ans)
 }
 
 // =====================
