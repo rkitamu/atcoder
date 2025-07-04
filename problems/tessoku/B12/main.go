@@ -18,26 +18,28 @@ const FACTORIAL_CACHE_SIZE = 10000000
 const MOD = 1000000007
 
 /*
-	x^3 + x = N の xを求める問題
-
-1 <= x <= 10^5
+x^3 + x = n の xを求める
+1 <= n <= 10^6 から、xは 1 ~ 100 の範囲
+1 ~ 100 で精度0.001まで保証するには、
+2^y >= 10^5となるyの数だけ2分探索すれば良い
+2^17 = 131072 >= 10^5 となるため、17回2分探索すると答えが求まる
 */
 func main() {
 	defer flush()
-	n := ni()
-	r := float64(50*50*50 + 50)
+	n := float64(ni())
 	l := float64(1)
-	for l < r {
-		mid := (l + r) / 2.0
-		if mid*mid*mid+mid == float64(n) {
-			out(mid)
-			return
-		} else if mid*mid*mid+mid < float64(n) {
-			l = mid + 1
-		} else {
-			r = mid
+	r := float64(100)
+	m := float64(0)
+	for i := 0; i < 17; i++ {
+		m = (l + r) / 2
+		v := m*m*m + m
+		if v < n {
+			l = m
+		} else if n < v {
+			r = m
 		}
 	}
+	out(formatFloat(m, 7))
 }
 
 // =====================
