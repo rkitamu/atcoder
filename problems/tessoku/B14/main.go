@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"sort"
 	"strconv"
 	// "container/heap"
 )
@@ -22,11 +21,42 @@ func main() {
 	defer flush()
 	n, k := ni(), ni()
 	a := nis(n)
-	bn := n/2+ n%2
-	cn := n/2 
-	b := make([]int, bn*bn)
-	c := make([]int, cn*cn)
-	
+	bketa := n/2 + n%2
+	bn := pow(2, bketa)
+	cketa := n / 2
+	cn := pow(2, cketa)
+	b := make([]int, bn)
+	c := make([]int, cn)
+
+	for i := 0; i < 1<<bketa; i++ {
+		sum := 0
+		for j := 0; j < bketa; j++ {
+			if i&(1<<j) != 0 {
+				sum += a[j]
+			}
+		}
+		b[i] = sum
+	}
+
+	for i := 0; i < 1<<cketa; i++ {
+		sum := 0
+		for j := 0; j < cketa; j++ {
+			if i&(1<<j) != 0 {
+				sum += a[bketa+j]
+			}
+		}
+		c[i] = sum
+	}
+
+	for i := 0; i < bn; i++ {
+		for j := 0; j < cn; j++ {
+			if k - b[i] == c[j] {
+				out("Yes")
+				return
+			}
+		}
+	}
+	out("No")
 }
 
 // =====================
