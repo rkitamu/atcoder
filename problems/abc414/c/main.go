@@ -19,6 +19,119 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	a, n := ni(), ni()
+	palindromes := *generatePalindrome(1, n)
+	ans := 0
+	for _, p := range palindromes {
+		num, _ := strconv.Atoi(p)
+		aBaseNum := toBase(num, a)
+		if isPalindrome(aBaseNum) {
+			ans += num
+		}
+	}
+	out(ans)
+}
+
+func generatePalindrome(min, max int) *[]string {
+	palindromes := make([]string, 0)
+
+	// 範囲内の全ての回文を生成
+	for length := len(strconv.Itoa(min)); length <= len(strconv.Itoa(max)); length++ {
+		palindromes = append(palindromes, *generatePalindromesByLength(length)...)
+	}
+
+	// 範囲内の回文のみをフィルタリング
+	// 遅そう
+	result := make([]string, 0)
+	for _, p := range palindromes {
+		num, _ := strconv.Atoi(p)
+		if num >= min && num <= max {
+			result = append(result, p)
+		}
+	}
+
+	return &result
+}
+
+func generatePalindromesByLength(length int) *[]string {
+	palindromes := make([]string, 0, 10000) // 予測できるなら capacity を指定
+
+	if length == 1 {
+		for i := byte('0'); i <= '9'; i++ {
+			palindromes = append(palindromes, string([]byte{i}))
+		}
+		return &palindromes
+	}
+
+	halfLength := (length + 1) / 2
+	start := int(math.Pow10(halfLength - 1))
+	end := int(math.Pow10(halfLength)) - 1
+
+	for i := start; i <= end; i++ {
+		left := strconv.Itoa(i)
+		leftBytes := []byte(left)
+
+		var palindrome []byte
+		if length%2 == 0 {
+			palindrome = make([]byte, 0, 2*len(leftBytes))
+			palindrome = append(palindrome, leftBytes...)
+			for j := len(leftBytes) - 1; j >= 0; j-- {
+				palindrome = append(palindrome, leftBytes[j])
+			}
+		} else {
+			palindrome = make([]byte, 0, 2*len(leftBytes)-1)
+			palindrome = append(palindrome, leftBytes...)
+			for j := len(leftBytes) - 2; j >= 0; j-- {
+				palindrome = append(palindrome, leftBytes[j])
+			}
+		}
+		palindromes = append(palindromes, string(palindrome))
+	}
+	return &palindromes
+}
+
+func reverseString(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
+}
+
+// aをb進数に変換
+func toBase(n, base int) []byte {
+	if n == 0 {
+		return []byte{'0'}
+	}
+
+	digits := make([]byte, 0, 32) // 十分な長さを確保
+	for n > 0 {
+		r := n % base
+		var b byte
+		if r < 10 {
+			b = '0' + byte(r)
+		} else {
+			b = 'a' + byte(r-10)
+		}
+		digits = append(digits, b)
+		n /= base
+	}
+
+	// 反転（下位→上位）
+	for i, j := 0, len(digits)-1; i < j; i, j = i+1, j-1 {
+		digits[i], digits[j] = digits[j], digits[i]
+	}
+	return digits
+}
+
+// stringの回文判定
+func isPalindrome(bs []byte) bool {
+	for i, j := 0, len(bs)-1; i < j; i, j = i+1, j-1 {
+		if bs[i] != bs[j] {
+			return false
+		}
+	}
+	return true
 }
 
 // =====================
