@@ -1,102 +1,19 @@
 {
   "version": "2.0.0",
   "tasks": [
-    /*
-    Ctrl + Shift + p -> Case Runner: Run Test Case
     {
-      "label": "Run Tests (prompt)",
+      "label": "Update atcoder-cli template",
       "type": "shell",
-      "command": "./test.sh",
-      "args": [
-        "${input:contest}",
-        "${input:problem}"
-      ],
-      "group": "test",
-      "problemMatcher": [],
+      "command": "${workspaceFolder}/scripts/update_template.sh",
+      "group": "none",
       "presentation": {
         "echo": true,
-        "reveal": "always",
-        "panel": "shared"
+        "reveal": "silent",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
       }
-    },
-    {
-      "label": "Run Single Case (pick)",
-      "type": "shell",
-      "command": "./test.sh",
-      "args": [
-        "${input:contest}",
-        "${input:problem}",
-        "--case",
-        "${input:case}"
-      ],
-      "group": "test",
-      "problemMatcher": [],
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "panel": "shared"
-      }
-    },*/
-    {
-      "label": "Setup Problem (prompt)",
-      "type": "shell",
-      "command": "./setup.sh",
-      "args": [
-        "${input:contest}",
-        "${input:problem}"
-      ],
-      "group": "build",
-      "problemMatcher": [],
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "panel": "shared"
-      }
-    },
-    {
-      "label": "Clean All",
-      "type": "shell",
-      "command": "./clean.sh",
-      "group": "build",
-      "problemMatcher": [],
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "panel": "shared"
-      }
-    },
-    {
-      "label": "Install VSIX Extensions",
-      "type": "shell",
-      "command": "./.devcontainer/after-build-setup.sh",
-      "problemMatcher": [],
-      "presentation": {
-        "echo": true,
-        "reveal": "always"
-      }
-    }
-  ],
-  "inputs": [
-    {
-      "id": "contest",
-      "type": "promptString",
-      "description": "Enter contest directory (e.g. abc405)"
-    },
-    {
-      "id": "problem",
-      "type": "promptString",
-      "description": "Enter problem letter (e.g. a, b, c)"
-    },
-    {
-      "id": "case",
-      "type": "pickString",
-      "description": "Select a test case",
-      "options": [
-        "a_case01",
-        "a_case02",
-        "a_case03",
-        "a_case04"
-      ]
     }
   ]
 }

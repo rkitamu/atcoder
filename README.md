@@ -20,64 +20,20 @@ Cmd+Shift+P → Dev Containers: Reopen in Container
 
 This will build a container with:
 
-* Go 1.20.6
-* pipx + `online-judge-tools`
-* `gopls` (Go language server)
+* Go:latest
+* node.js
+* Python3
+* online-judge-tools
+* atcoder-cli
 * Pre-installed VS Code extensions for Go and testing
-* Task to install `.vsix` extensions manually
 
-#### 2. Install case-runner.vsix (Optional)
+#### 2. Login to atcoder-cli and online-judge-tools with aclogin
 
-case-runner is a tool for testing programs using sample cases downloaded by `setup.sh`
-
-Compile case-runner:
-
-```bash
-$ npm install -g @vscode/vsce
-$ cd path/to/atcoder/case-runner
-$ vsce package
+```shell
+$ aclogin
 ```
 
-Run the following VS Code task:
-
-```bash
-Cmd+Shift+P → Tasks: Run Task → Install VSIX Extensions
-```
-
-This will install `case-runner` from compiled `.vsix`.
-
-### 1. Install dependencies
-
-#### 📌 Required tools:
-
-* **Go** (≥ 1.20)
-* **Node.js** (recommended: LTS)
-* **npm**
-* **Python 3**
-* **pipx** (for Python package isolation)
-* **VS Code**
-
-#### 📦 Install `online-judge-tools`
-
-```bash
-pipx install online-judge-tools
-```
-
-Used by `setup.sh` to download sample test cases from AtCoder.
-
-#### 📦 Install `vsce` to build the VS Code extension
-
-```bash
-npm install -g @vscode/vsce
-```
-
-If you get build errors, you may need to install `libsecret-1-dev` (Linux):
-
-```bash
-sudo apt install libsecret-1-dev
-```
-
----
+paste REVEL_SESSION
 
 ## 📁 Directory Structure
 

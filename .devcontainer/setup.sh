@@ -20,3 +20,4 @@ pipx ensurepath
 
 # atcoder-cli settings
 acc config default-contest-dirname-format /workspaces/atcoder/problems/{ContestID}
+cp -r /workspaces/atcoder/settings/acc/* `acc config-dir`
