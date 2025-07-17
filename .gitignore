@@ -28,5 +28,5 @@ __pycache__/
 *.pyc
 
 # online-judge-tools config
-.test/
+.tests/
 .sample/
