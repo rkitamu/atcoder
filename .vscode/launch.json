@@ -6,7 +6,7 @@
       "type": "go",
       "request": "launch",
       "program": "${file}",
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
     },
     {
       "name": "Debug Go (prompt)",

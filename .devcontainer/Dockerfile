@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/dotnet:7.0
+FROM mcr.microsoft.com/devcontainers/go:latest
 
 # 必要なパッケージをインストール
 RUN apt-get update && apt-get install -y \

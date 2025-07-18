@@ -28,5 +28,6 @@ __pycache__/
 *.pyc
 
 # online-judge-tools config
-.tests/
+tests/
+contest.acc.json
 .sample/

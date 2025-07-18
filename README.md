@@ -40,6 +40,31 @@ Paste copied REVEL_SESSION
 4. Run VSCode task: `Update atcoder-cli template`
 5. Complete
 
+## 🚀 Usage
+
+### Basic Workflow
+
+1. **Create a new contest workspace:**
+
+```bash
+$ acc new abc123 --template default
+```
+
+2. **Write your solution:**
+Edit the generated `main.go` file in each problem directory.
+
+3. **Test your solution:**
+
+Open Edited `main.go` file and run the test task: Run Test Cases
+
+4. **Submit your solution:**
+
+TODO: online-judge-tools is not supported yet.
+
+```bash
+$ acc submit
+```
+
 ## 📁 Directory Structure
 
 ```plaintext
