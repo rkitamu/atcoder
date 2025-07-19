@@ -19,6 +19,14 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	questions := nis2d(n, 2, 0)
+
+	ans := float64(0)
+	for i := 0; i < n; i++ {
+		ans += float64(questions[i][1]) / float64(questions[i][0])
+	}
+	out(formatFloat(ans, 7))
 }
 
 // =====================

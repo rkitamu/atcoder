@@ -19,6 +19,21 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+	r := 0
+	y := 0
+	b := 0
+	for i := 0; i < n; i++ {
+		if a[i] == 1 {
+			r++
+		}else if a[i] == 2 {
+			y++
+		}else if a[i] == 3 {
+			b++
+		}
+	}
+	out(r*(r-1)/2 + y*(y-1)/2 + b*(b-1)/2)
 }
 
 // =====================

@@ -19,6 +19,8 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	out(2*n + 3)
 }
 
 // =====================

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
 	// "container/heap"
 )
@@ -19,6 +20,39 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+
+	ans := make([]int, 0)
+	if isPrime(n) {
+		out(n)
+		return
+	}
+	var factorization func(n int)
+	factorization = func(n int) {
+		for i := 2; i*i <= n; i++ {
+			if n%i == 0 {
+				l := i
+				r := n / i
+				if isPrime(l) {
+					ans = append(ans, l)
+				} else {
+					factorization(l)
+				}
+				if isPrime(r) {
+					ans = append(ans, r)
+				} else {
+					factorization(r)
+				}
+				break
+			}
+		}
+	}
+
+	factorization(n)
+	sort.Slice(ans, func(i, j int) bool {
+		return ans[i] < ans[j]
+	})
+	out1dNumber(ans)
 }
 
 // =====================
@@ -588,21 +622,22 @@ func (g *Graph) GetNode(id int) *Node {
 // ======================
 // isPrime checks if n is prime
 func isPrime(n int) bool {
-	if n < 2 {
-		return false
-	}
-	if n == 2 {
-		return true
-	}
-	cur := 3
-	max := int(math.Floor(float64(math.Sqrt(float64(n)))))
-	for cur <= max {
-		if m := n % cur; m == 0 {
-			return false
-		}
-		cur++
-	}
-	return true
+    if n < 2 {
+        return false
+    }
+    if n == 2 {
+        return true
+    }
+    if n%2 == 0 {
+        return false
+    }
+    
+    for i := 3; i*i <= n; i += 2 {
+        if n%i == 0 {
+            return false
+        }
+    }
+    return true
 }
 
 // gcd calculates the greatest common divisor of a and b

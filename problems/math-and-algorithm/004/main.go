@@ -19,6 +19,7 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	out(ni()*ni()*ni())
 }
 
 // =====================

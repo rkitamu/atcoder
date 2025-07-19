@@ -19,6 +19,18 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+	var lc func(l, r int) int
+	lc = func(l, r int) int {
+		d := gcd(l, r)
+		return l / d * r
+	}
+	ans := a[0]
+	for i := 1; i < n; i++ {
+		ans = lc(ans, a[i])
+	}
+	out(ans)
 }
 
 // =====================

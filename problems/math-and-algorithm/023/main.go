@@ -19,6 +19,16 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	b := nis(n)
+	r := nis(n)
+	bsum := 0
+	rsum := 0
+	for i := 0; i < n; i++ {
+		bsum += b[i]
+		rsum += r[i]
+	}
+	out(formatFloat(float64(bsum)/float64(n) + float64(rsum)/float64(n), 7))
 }
 
 // =====================

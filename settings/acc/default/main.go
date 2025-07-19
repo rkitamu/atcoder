@@ -588,21 +588,22 @@ func (g *Graph) GetNode(id int) *Node {
 // ======================
 // isPrime checks if n is prime
 func isPrime(n int) bool {
-	if n < 2 {
-		return false
-	}
-	if n == 2 {
-		return true
-	}
-	cur := 3
-	max := int(math.Floor(float64(math.Sqrt(float64(n)))))
-	for cur <= max {
-		if m := n % cur; m == 0 {
-			return false
-		}
-		cur++
-	}
-	return true
+    if n < 2 {
+        return false
+    }
+    if n == 2 {
+        return true
+    }
+    if n%2 == 0 {
+        return false
+    }
+    
+    for i := 3; i*i <= n; i += 2 {
+        if n%i == 0 {
+            return false
+        }
+    }
+    return true
 }
 
 // gcd calculates the greatest common divisor of a and b

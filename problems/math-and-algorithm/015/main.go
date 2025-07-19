@@ -19,6 +19,18 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	c, d := ni(), ni()
+	var gc func(a, b int) int
+	gc = func(a, b int) int {
+		if a < b {
+			a, b = b, a
+		}
+		if a%b == 0 {
+			return b
+		}
+		return gcd(b, a%b)
+	}
+	out(gc(c, d))
 }
 
 // =====================

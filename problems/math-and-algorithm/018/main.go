@@ -19,6 +19,17 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+	c := make(map[int]int)
+	c[100] = 0
+	c[200] = 0
+	c[300] = 0
+	c[400] = 0
+	for _, v := range a {
+		c[v]++
+	}
+	out(c[100]*c[400] + c[200]*c[300])
 }
 
 // =====================

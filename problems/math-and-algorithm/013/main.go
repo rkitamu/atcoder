@@ -19,6 +19,13 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	for i := 1; i*i <= n; i++ {
+		if n%i == 0 {
+			out(i)
+			out(n / i)
+		}
+	}
 }
 
 // =====================

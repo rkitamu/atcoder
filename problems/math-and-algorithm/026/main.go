@@ -19,6 +19,12 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	expect := float64(1)
+	for i := 1; i < n; i++ {
+		expect += float64(n) / float64(n-i)
+	}
+	out(formatFloat(expect, 7))
 }
 
 // =====================

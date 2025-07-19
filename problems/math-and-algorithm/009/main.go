@@ -19,6 +19,28 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	s := ni()
+	a := nis(n, 1)
+	dp := make([][]bool, n+1)
+	for i := 0; i <= n; i++ {
+		dp[i] = make([]bool, s+1)
+		dp[i][0] = true
+	}
+	// iまで選んだ時、和をjにできるか
+	for i := 1; i <= n; i++ {
+		for j := 1; j <= s; j++ {
+			dp[i][j] = dp[i-1][j]
+			if a[i] <= j {
+				dp[i][j] = dp[i-1][j-a[i]] || dp[i][j]
+			}
+		}
+	}
+	if dp[n][s] {
+		out("Yes")
+	} else {
+		out("No")
+	}
 }
 
 // =====================

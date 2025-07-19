@@ -19,6 +19,21 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	r := ni()
+	nex := 1
+	for i := 1; i <= n; i++ {
+		nex *= i
+	}
+	rex := 1
+	for i := 1; i <= r; i++ {
+		rex *= i
+	}
+	nminusrex := 1
+	for i := 1; i <= n-r; i++ {
+		nminusrex *= i
+	}
+	out(nex / (rex * nminusrex))
 }
 
 // =====================
