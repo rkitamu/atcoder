@@ -23,39 +23,22 @@ func main() {
     n, m := ni(), ni()
     abes := nis2d(m, 2, 0) // a = 0, b = 1
 
-	// bの大きい順かつaの小さい順
-    sort.Slice(abes, func(i, j int) bool {
-        if abes[i][1] == abes[j][1] {
-            return abes[i][0] < abes[j][0]
-        }
-        return abes[i][1] > abes[j][1]
-    })
-
-	copiedAbes := make([][]int, len(abes))
-	copy(copiedAbes, abes)
-	// aの大きい順
-	sort.Slice(copiedAbes, func(i, j int) bool {
-		return copiedAbes[i][0] > copiedAbes[j][0]
+	sort.Slice(abes, func(i, j int) bool {
+		if abes[i][0] - abes[i][1] == abes[j][0] - abes[j][1] {
+			return abes[i][1] > abes[j][1] // 同じ差なら a の大きい順
+		}
+		return abes[i][0] - abes[i][1] < abes[j][0] - abes[j][1]
 	})
 
-	emBin := n // 空の瓶
+	cur := n
 	cnt := 0
-
-	var solve func(bin int, abes [][]int, copiedAbes [][]int)
-	solve = func(bin int, abes [][]int) {
-		// 最大のbを探す
-		for i := 0; i < len(abes); i++ {
-			if abes[i][0] <= bin {
-				emBin = emBin + abes[i][1] - abes[i][0]
-				// abes[i][0]以下のcopiedを取得
-				abes = 
-				cnt++
-				solve(emBin, abes)
-				return
-			}
+	for i := 0; i < m; i++ {
+		if abes[i][0] <= cur {
+			d := abes[i][0] - abes[i][1]
+			cnt += (cur - abes[i][1]) / d
+			cur = abes[i][1] + ((cur - abes[i][1]) % d)
 		}
 	}
-	solve(emBin, abes)
 	out(cnt)
 }
 
