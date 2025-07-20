@@ -19,6 +19,38 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+	var mergeSort func(s []int, l, r int) []int
+	mergeSort = func(s []int, l, r int) []int {
+		if r-l <= 1 {
+			return s[l:r]
+		}
+		mid := (l + r) / 2
+		left := mergeSort(s, l, mid)
+		right := mergeSort(s, mid, r)
+		merged := make([]int, 0, r-l)
+		i, j := 0, 0
+		for i < len(left) && j < len(right) {
+			if left[i] <= right[j] {
+				merged = append(merged, left[i])
+				i++
+			} else {
+				merged = append(merged, right[j])
+				j++
+			}
+		}
+		for i < len(left) {
+			merged = append(merged, left[i])
+			i++
+		}
+		for j < len(right) {
+			merged = append(merged, right[j])
+			j++
+		}
+		return merged
+	}
+	out1dNumber(mergeSort(a, 0, n))
 }
 
 // =====================

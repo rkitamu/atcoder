@@ -158,17 +158,15 @@ func formatFloat(f float64, precision int) string {
 		return fmt.Sprintf("%v", f)
 	}
 
-	magnitude := math.Log10(math.Abs(f))
-	effectivePrecision := precision - int(magnitude) - 1
-
-	if effectivePrecision < 0 {
-		effectivePrecision = 0
+	// precisionを小数点以下の桁数として直接使用
+	if precision < 0 {
+		precision = 0
 	}
-	if effectivePrecision > 15 { // float64の限界
-		effectivePrecision = 15
+	if precision > 15 { // float64の限界
+		precision = 15
 	}
 
-	return fmt.Sprintf("%.*f", effectivePrecision, f)
+	return fmt.Sprintf("%.*f", precision, f)
 }
 
 // out writes the output to stdout.
@@ -588,22 +586,22 @@ func (g *Graph) GetNode(id int) *Node {
 // ======================
 // isPrime checks if n is prime
 func isPrime(n int) bool {
-    if n < 2 {
-        return false
-    }
-    if n == 2 {
-        return true
-    }
-    if n%2 == 0 {
-        return false
-    }
-    
-    for i := 3; i*i <= n; i += 2 {
-        if n%i == 0 {
-            return false
-        }
-    }
-    return true
+	if n < 2 {
+		return false
+	}
+	if n == 2 {
+		return true
+	}
+	if n%2 == 0 {
+		return false
+	}
+
+	for i := 3; i*i <= n; i += 2 {
+		if n%i == 0 {
+			return false
+		}
+	}
+	return true
 }
 
 // gcd calculates the greatest common divisor of a and b

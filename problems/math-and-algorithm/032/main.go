@@ -19,6 +19,15 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n, x := ni(), ni()
+	a := nis(n)
+	for _, v := range a {
+		if v == x {
+			out("Yes")
+			return
+		}
+	}
+	out("No")
 }
 
 // =====================

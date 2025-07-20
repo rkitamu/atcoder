@@ -19,6 +19,18 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis2d(n, 2, 0)
+	ans := math.MaxFloat64
+	for i := 0; i < n-1; i++ {
+		for j := i + 1; j < n; j++ {
+			x := a[j][0] - a[i][0]
+			y := a[j][1] - a[i][1]
+			aVec := NewVector(x, y)
+			ans = min(ans, aVec.Magnitude())
+		}
+	}
+	out(formatFloat(ans, 10))
 }
 
 // =====================

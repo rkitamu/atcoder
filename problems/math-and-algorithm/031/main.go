@@ -19,6 +19,17 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+	dp := make([][]int, n+1)
+	for i := 0; i <= n; i++ {
+		dp[i] = make([]int, 2)
+	}
+	for i := 1; i <= n; i++ {
+		dp[i][0] = dp[i-1][1] + a[i-1]
+		dp[i][1] = max(dp[i-1][0], dp[i-1][1])
+	}
+	out(max(dp[n][0], dp[n][1]))
 }
 
 // =====================

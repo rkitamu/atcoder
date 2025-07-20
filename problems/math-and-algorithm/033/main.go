@@ -19,6 +19,30 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	ax, ay := ni(), ni()
+	bx, by := ni(), ni()
+	cx, cy := ni(), ni()
+
+	bc := NewVector(cx-bx, cy-by)
+	ba := NewVector(ax-bx, ay-by)
+
+	dot := bc.Dot(*ba)
+
+	ans := float64(0)
+	if dot <= 0 {
+		ans = ba.Magnitude()
+	} else if 0 < dot {
+		cb := NewVector(bx-cx, by-cy)
+		ca := NewVector(ax-cx, ay-cy)
+		dot := cb.Dot(*ca)
+		if dot <= 0 {
+			ans = ca.Magnitude()
+		} else if 0 < dot {
+			cm := ba.CrossMagnitude(*bc)
+			ans = cm / bc.Magnitude()
+		}
+	}
+	out(formatFloat(ans, 7))
 }
 
 // =====================
@@ -153,22 +177,21 @@ func flush() {
 }
 
 // 相対誤差が10^-6: formatFloat(f, 7)
+
 func formatFloat(f float64, precision int) string {
 	if math.IsNaN(f) || math.IsInf(f, 0) {
 		return fmt.Sprintf("%v", f)
 	}
 
-	magnitude := math.Log10(math.Abs(f))
-	effectivePrecision := precision - int(magnitude) - 1
-
-	if effectivePrecision < 0 {
-		effectivePrecision = 0
+	// precisionを小数点以下の桁数として直接使用
+	if precision < 0 {
+		precision = 0
 	}
-	if effectivePrecision > 15 { // float64の限界
-		effectivePrecision = 15
+	if precision > 15 { // float64の限界
+		precision = 15
 	}
 
-	return fmt.Sprintf("%.*f", effectivePrecision, f)
+	return fmt.Sprintf("%.*f", precision, f)
 }
 
 // out writes the output to stdout.

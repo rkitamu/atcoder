@@ -19,6 +19,14 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	h := nis(n, 1)
+	dp := make([]int, n+1)
+	dp[2] = abs(h[1] - h[2])
+	for i := 3; i <= n; i++ {
+		dp[i] = min(dp[i-1]+abs(h[i-1]-h[i]), dp[i-2]+abs(h[i-2]-h[i]))
+	}
+	out(dp[n])
 }
 
 // =====================

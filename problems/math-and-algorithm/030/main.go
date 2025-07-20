@@ -19,6 +19,24 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n, w := ni(), ni()
+	wv := nis2d(n, 2, 0)
+	dp := make([][]int, n+1)
+	for i := 0; i <= n; i++ {
+		dp[i] = make([]int, w+1)
+	}
+
+	ans := 0
+	for i := 1; i <= n; i++ {
+		for j := 1; j <= w; j++ {
+			dp[i][j] = dp[i-1][j]
+			if wv[i-1][0] <= j {
+				dp[i][j] = max(dp[i][j], dp[i-1][j-wv[i-1][0]]+wv[i-1][1])
+			}
+		}
+		ans = max(ans, dp[i][w])
+	}
+	out(ans)
 }
 
 // =====================
