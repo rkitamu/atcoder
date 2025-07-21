@@ -19,6 +19,14 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	N := ni()
+	A := nis(N-1, 1)
+	B := nis(N-1, 1)
+	dp := make([]int, N+1)
+	for i := N-1; i > 0; i-- {
+		dp[i] = max(dp[A[i]] + 100, dp[B[i]] + 150)
+	}
+	out(dp[1])
 }
 
 // =====================
