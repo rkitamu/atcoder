@@ -20,18 +20,41 @@ const MOD = 1000000007
 func main() {
 	defer flush()
 	n := ni()
-	pa := nis2d(n, 2, 1)
+	paes := nis2d(n, 2, 1)
 	dp := make([][]int, n+1)
 	for i := 0; i <= n; i++ {
 		dp[i] = make([]int, n+1)
 	}
 
-	for length := n; length >= 1; length-- {
-		for l := 1; l <= length; l++ {
-			r := n - length + 1
-			
+	ans := 0
+	for i := 1; i <= n; i++ {
+		for j := 0; j <= n-i; j++ {
+			l := i
+			r := n - j
+			// 左を取った時の値
+			lv := 0
+			if 1 < l {
+				lv += dp[l-1][r]
+				// pが先に取られていなければポイント加算
+				if l <= paes[l-1][1] && paes[l-1][1] <= r {
+					lv += paes[l-1][2]
+				}
+			}
+			// 右を取った時の値
+			rv := 0
+			if r < n {
+				rv += dp[l][r+1]
+				// pが先に取られていなければポイント加算
+				if l <= paes[r+1][1] && paes[r+1][1] <= r {
+					rv += paes[r+1][2]
+				}
+			}
+			// より多くポイントを獲得できる方を選ぶ
+			dp[l][r] = max(lv, rv)
+			ans = max(ans, dp[l][r])
 		}
 	}
+	out(ans)
 }
 
 // =====================
