@@ -19,6 +19,48 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	N := ni()
+	M := ni()
+	A := nis2d(M, N, 0)
+	
+	// dp[i][S] = i枚目までのクーポン券を考慮して、状態Sを達成するのに必要な最小枚数
+	dp := make([][]int, M+1)
+	for i := 0; i <= M; i++ {
+		dp[i] = make([]int, 1<<N)
+		for j := 0; j < 1<<N; j++ {
+			dp[i][j] = math.MaxInt32
+		}
+	}
+	dp[0][0] = 0
+
+	for i := 0; i < M; i++ {
+		mask := 0
+		for j := 0; j < N; j++ {
+			if A[i][j] == 1 {
+				mask |= 1 << j
+			}
+		}
+		
+		for S := 0; S < 1<<N; S++ {
+			if dp[i][S] == math.MaxInt32 {
+				continue
+			}
+			
+			// クーポン券iを使わない場合
+			dp[i+1][S] = min(dp[i+1][S], dp[i][S])
+			
+			// クーポン券iを使う場合
+			newS := S | mask
+			dp[i+1][newS] = min(dp[i+1][newS], dp[i][S]+1)
+		}
+	}
+
+	ans := dp[M][(1<<N)-1]
+	if ans == math.MaxInt32 {
+		out(-1)
+	} else {
+		out(ans)
+	}
 }
 
 // =====================
