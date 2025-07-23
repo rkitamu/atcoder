@@ -19,6 +19,24 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n, 1)
+
+	dp := make([]int, n+1)
+	l := make([]int, n+1)
+	len := 0
+
+	for i := 1; i <= n; i++ {
+		pos := lowerBound(l, 1, len+1, a[i])
+		dp[i] = pos
+
+		l[dp[i]] = a[i]
+		if dp[i] > len {
+			len += 1
+		}
+	}
+
+	out(len)
 }
 
 // =====================
@@ -1131,4 +1149,20 @@ func reverseString(input *[]byte) *[]byte {
 		dst[i] = src[n-1-i]
 	}
 	return &dst
+}
+
+func lowerBound[T Number](a []T, l, r int, x T) int {
+	left := l
+	right := r
+
+	for left < right {
+		mid := (left + right) / 2
+		if a[mid] < x {
+			left = mid + 1
+		} else {
+			right = mid
+		}
+	}
+
+	return left
 }
