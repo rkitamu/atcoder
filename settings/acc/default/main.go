@@ -1047,6 +1047,23 @@ func popcount(x int) int {
 	return count
 }
 
+// a[l, r) の範囲で x 以上で最小のa[i]のiを返す (aはソート済み)
+func lowerBound[T Number](a []T, l, r int, x T) int {
+	left := l
+	right := r
+
+	for left < right {
+		mid := (left + right) / 2
+		if a[mid] < x {
+			left = mid + 1
+		} else {
+			right = mid
+		}
+	}
+
+	return left
+}
+
 // --------
 // parindromes
 // --------
