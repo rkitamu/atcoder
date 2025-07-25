@@ -19,6 +19,22 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	h, w := ni(), ni()
+	a := nrs2d(h, w, 1)
+	dp := make([][]int, h+1)
+	for i := range dp {
+		dp[i] = make([]int, w+1)
+	}
+	dp[1][1] = 1
+	for i := 1; i <= h; i++ {
+		for j := 1; j <= w; j++ {
+			if a[i][j] == '#' {
+				continue
+			}
+			dp[i][j] = dp[i-1][j] + dp[i][j-1] + dp[i][j]
+		}
+	}
+	out(dp[h][w])
 }
 
 // =====================
