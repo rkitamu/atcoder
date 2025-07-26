@@ -19,6 +19,20 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	q := ni()
+	for 0 < q {
+		q--
+		solve()
+	}
+}
+
+func solve() {
+	x := ni()
+	if isPrime(x) {
+		out("Yes")
+	} else {
+		out("No")
+	}
 }
 
 // =====================
