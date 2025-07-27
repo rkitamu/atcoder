@@ -19,6 +19,26 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	t := make([]bool, n+1)
+	for i := 2; i <= n; i++ {
+		if t[i] {
+			continue
+		}
+		if isPrime(i) {
+			for j := i * 2; j <= n; j += i {
+				t[j] = true
+			}
+		}
+	}
+
+	t[0] = true
+	t[1] = true
+	for i := 0; i <= n; i++ {
+		if !t[i] {
+			out(i)
+		}
+	}
 }
 
 // =====================
