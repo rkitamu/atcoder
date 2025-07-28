@@ -19,6 +19,8 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	a, b := ni(), ni()
+	out(powMod(a, b))
 }
 
 // =====================
@@ -701,6 +703,7 @@ func abs[T Number](a T) T {
 	return a
 }
 
+// O(log n)
 func pow[T Integer](base, exp T) T {
 	if exp == 0 {
 		return 1
@@ -710,9 +713,16 @@ func pow[T Integer](base, exp T) T {
 	}
 
 	result := T(1)
-	for i := T(0); i < exp; i++ {
-		result *= base
+	currentBase := base
+	
+	for exp > 0 {
+		if exp&1 == 1 {
+			result *= currentBase
+		}
+		currentBase *= currentBase
+		exp >>= 1
 	}
+	
 	return result
 }
 

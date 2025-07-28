@@ -19,6 +19,12 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a, b := 1, 1
+	for i := 2; i < n; i++ {
+		a, b = b, addMod(a, b)
+	}
+	out(b)
 }
 
 // =====================
