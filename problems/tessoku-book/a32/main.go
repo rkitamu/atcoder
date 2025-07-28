@@ -19,6 +19,23 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a, b := ni(), ni()
+	dp := make([]bool, n+1)
+	for i := 0; i <= n; i++ {
+		if i >= a && !dp[i-a] {
+			dp[i] = true
+		} else if i >= b && !dp[i-b] {
+			dp[i] = true
+		} else {
+			dp[i] = false
+		}
+	}
+	if dp[n] {
+		out("First")
+	} else {
+		out("Second")
+	}
 }
 
 // =====================

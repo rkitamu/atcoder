@@ -19,6 +19,8 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	h, w := ni(), ni()
+	out(combMod(h+w-2, h-1))
 }
 
 // =====================
