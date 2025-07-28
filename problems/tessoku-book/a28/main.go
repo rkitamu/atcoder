@@ -15,10 +15,25 @@ func init() {
 }
 
 const FACTORIAL_CACHE_SIZE = 10000000
-const MOD = 1000000007
+const MOD = 10000
 
 func main() {
 	defer flush()
+	n := ni()
+	ans := 0
+	for i := 0; i < n; i++ {
+		t, a := ns(), ni()
+		switch t {
+		case "+":
+			ans +=  a % MOD
+		case "-":
+			ans = subMod(ans, a)
+		case "*":
+			ans *= a % MOD
+		}
+		ans = ans % MOD
+		out(ans)
+	}
 }
 
 // =====================
