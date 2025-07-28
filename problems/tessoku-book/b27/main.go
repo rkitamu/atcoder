@@ -19,6 +19,8 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	a, b := ni(), ni()
+	out(lcm(a, b))
 }
 
 // =====================
