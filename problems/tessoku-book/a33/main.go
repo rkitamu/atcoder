@@ -19,6 +19,18 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+
+	xor := a[0]
+	for i := 1; i < n; i++ {
+		xor ^= a[i]
+	}
+	if xor != 0 {
+		out("First")
+	} else {
+		out("Second")
+	}
 }
 
 // =====================
