@@ -19,6 +19,19 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	_, k := ni(), ni()
+	a := ns()
+	oncnt := 0
+	for _, v := range a {
+		if v == '1' {
+			oncnt++
+		}
+	}
+	if oncnt % 2 == k % 2 {
+		out("Yes")
+	} else {
+		out("No")
+	}
 }
 
 // =====================
