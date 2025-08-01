@@ -19,19 +19,19 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
-	n, k := ni(), ni()
+	n, m, b := ni(), ni(), ni()
 	a := nis(n)
-	oncnt := 0
-	for _, v := range a {
-		if v == 1 {
-			oncnt++
-		}
+	c := nis(m)
+	csum := 0
+	for i := 0; i < m; i++ {
+		csum += c[i]
 	}
-	if oncnt % 2 == k % 2 {
-		out("Yes")
-	} else {
-		out("No")
+	ans := 0
+	for i := 0; i < n; i++ {
+		ans += (a[i] + b) * m
+		ans += csum
 	}
+	out(ans)
 }
 
 // =====================
