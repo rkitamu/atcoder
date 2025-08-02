@@ -19,6 +19,31 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	num := make([]int, 0)
+	for 0 < n {
+		num = append(num, n%10)
+		n /= 10
+	}
+	numcnt := make([]int, 10)
+	for i := 0; i < num[0]; i++ {
+		numcnt[i]++
+	}
+	for i := 1; i <= 9; i++ {
+		keta := 10
+		bai := 1
+		for j := 0; j < len(num); j++ {
+			if num[j] == i {
+
+			} else if num[j] < i {
+				numcnt[i] += keta
+				numcnt[i] += num[j] * keta / 10 * bai
+			}
+			keta *= 10
+			bai++
+		}
+	}
+	out(numcnt)
 }
 
 // =====================
