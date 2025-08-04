@@ -19,6 +19,23 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	D, N := ni(), ni()
+	t := make([]int, D)
+	for i := 0; i < D; i++ {
+		t[i] = 24
+	}
+	for i := 0; i < N; i++ {
+		l, r, h := ni(), ni(), ni()
+		for j := l - 1; j <= r-1; j++ {
+			t[j] = min(t[j], h)
+		}
+	}
+
+	sum := 0
+	for _, v := range t {
+		sum += v
+	}
+	out(sum)
 }
 
 // =====================
