@@ -19,6 +19,33 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	N := ni()
+	S := ns()
+	grassA := make([]int, N+1)
+	grassA[1] = 1
+	for i := 0; i < N - 1; i++ {
+		if S[i] == 'A' {
+			grassA[i+2] = grassA[i+1] + 1
+		} else {
+			grassA[i+2] = 1
+		}
+	}
+
+	grassB := make([]int, N+1)
+	grassB[N] = 1
+	for i := N-2; 0 <= i; i-- {
+		if S[i] == 'B' {
+			grassB[i+1] = grassB[i+2] + 1
+		} else {
+			grassB[i+1] = 1
+		}
+	}
+
+	ans := 0
+	for i := 1; i <= N; i++ {
+		ans += max(grassA[i], grassB[i])
+	}
+	out(ans)
 }
 
 // =====================
