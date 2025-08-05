@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"strconv"
+	"sort"
 	// "container/heap"
 )
 
@@ -19,6 +20,20 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	N := ni()
+	movies := nis2d(N, 2, 0)
+	sort.Slice(movies, func(i, j int) bool {
+		return movies[i][1] < movies[j][1]
+	})
+	sum := 0
+	cur := 0
+	for i := 0; i < N; i++ {
+		if cur <= movies[i][0] {
+			sum++
+			cur = movies[i][1]
+		}
+	}
+	out(sum)
 }
 
 // =====================
