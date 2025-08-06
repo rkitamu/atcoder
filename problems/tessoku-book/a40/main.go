@@ -19,6 +19,19 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	sticks := make(map[int]int, 0)
+	for i := 0; i < n; i++ {
+		sticks[ni()]++
+	}
+
+	sum := 0
+	for _, s := range sticks {
+		if 3 <= s {
+			sum += s * (s-1) * (s-2) / 6;
+		}
+	}
+	out(sum)
 }
 
 // =====================
@@ -654,9 +667,9 @@ func lcms[T Integer](a ...T) T {
 	return l
 }
 
-var factorialCache = make([]int64, 0)
+var factorialCache = make([]int, 0)
 
-func factorial(n int) int64 {
+func factorial(n int) int {
 	if n < 0 {
 		panic("factorial: n must be non-negative")
 	}
@@ -667,13 +680,13 @@ func factorial(n int) int64 {
 		if i == 0 {
 			factorialCache = append(factorialCache, 1)
 		} else {
-			factorialCache = append(factorialCache, factorialCache[i-1]*int64(i))
+			factorialCache = append(factorialCache, factorialCache[i-1]*i)
 		}
 	}
 	return factorialCache[n]
 }
 
-func comb(n, k int) int64 {
+func comb(n, k int) int {
 	if n < 0 || k < 0 || k > n {
 		return 0
 	}
