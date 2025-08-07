@@ -19,6 +19,23 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	a := nis(n)
+	ma := make([]int, 101)
+	for i := 0; i < n; i++ {
+		ma[a[i]%100]++
+	}
+
+	cnt := 0
+	l, r := 1, 99
+	for l < r {
+		cnt += ma[l] * ma[r]
+		l++
+		r--
+	}
+	cnt += ma[50] * (ma[50] - 1) / 2
+	cnt += ma[0] * (ma[0] - 1) / 2
+	out(cnt)
 }
 
 // =====================
