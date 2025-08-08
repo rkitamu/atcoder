@@ -19,6 +19,15 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	s := ns()
+	for i := 0; i < n-2; i++ {
+		if s[i] == s[i+1] && s[i+1] == s[i+2] {
+			out("Yes")
+			return
+		}
+	}
+	out("No")
 }
 
 // =====================
