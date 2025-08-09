@@ -19,6 +19,22 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	x, y := ni(), ni()
+	history := make([]Pair[int, int], 0)
+	for x != 1 || y != 1 {
+		if x < y {
+			history = append(history, NewPair(x, y))
+			y -= x
+		} else {
+			history = append(history, NewPair(x, y))
+			x -= y
+		}
+	}
+
+	out(len(history))
+	for i := len(history) - 1; i >= 0; i-- {
+		out(history[i].First, history[i].Second)
+	}
 }
 
 // =====================
