@@ -19,6 +19,19 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	N, L := ni(), ni()
+	emax := 0
+	wmax := 0
+	for i := 0; i < N; i++ {
+		meter := ni()
+		dir := ns()
+		if dir == "E" {
+			emax = max(emax, L-meter)
+		} else {
+			wmax = max(wmax, meter)
+		}
+	}
+	out(max(emax, wmax))
 }
 
 // =====================

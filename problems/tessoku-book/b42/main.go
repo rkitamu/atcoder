@@ -19,6 +19,47 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	pp := make([]Pair[int, int], 0)
+	mm := make([]Pair[int, int], 0)
+	pm := make([]Pair[int, int], 0)
+	mp := make([]Pair[int, int], 0)
+
+	for i := 0; i < n; i++ {
+		a, b := ni(), ni()
+		if a + b > 0 {
+			pp = append(pp, NewPair(a, b))
+		}
+		if a + b < 0 {
+			mm = append(mm, NewPair(a, b))
+		}
+		if b - a > 0 {
+			pm = append(pm, NewPair(a, b))
+		}
+		if a - b > 0 {
+			mp = append(mp, NewPair(a, b))
+		}
+	}
+
+	ppsum := calc(&pp)
+	mmsum := calc(&mm)
+	pmsum := calc(&pm)
+	mpsum := calc(&mp)
+	ans := max(max(max(ppsum, mmsum), pmsum), mpsum)
+	out(ans)
+}
+
+func calc(cards *[]Pair[int, int]) int {
+	if len(*cards) == 0 {
+		return 0
+	}
+	asum := 0
+	bsum := 0
+	for i := 0; i < len(*cards); i++ {
+		asum += (*cards)[i].First
+		bsum += (*cards)[i].Second
+	}
+	return abs(asum) + abs(bsum)
 }
 
 // =====================

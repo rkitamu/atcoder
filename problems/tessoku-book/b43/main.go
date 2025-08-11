@@ -19,6 +19,15 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n, m := ni(), ni()
+	a := nis(m)
+	anst := make([]int, n+1)
+	for i := 0; i < m; i++ {
+		anst[a[i]]++
+	}
+	for i := 1; i <= n; i++ {
+		out(m-anst[i])
+	}
 }
 
 // =====================
