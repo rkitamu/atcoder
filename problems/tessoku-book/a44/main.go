@@ -19,6 +19,34 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	q := ni()
+	A := make([]int, n+1)
+	for i := 1; i <= n; i++ {
+		A[i] = i
+	}
+	rev := false
+	for z := 0; z < q; z++ {
+		t := ni()
+		if t == 1 {
+			x := ni()
+			y := ni()
+			if rev {
+				A[n-x+1] = y
+			} else {
+				A[x] = y
+			}
+		} else if t == 2 {
+			rev = !rev
+		} else {
+			x := ni()
+			if rev {
+				out(A[n-x+1])
+			} else {
+				out(A[x])
+			}
+		}
+	}
 }
 
 // =====================

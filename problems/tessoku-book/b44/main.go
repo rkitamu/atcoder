@@ -19,6 +19,19 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n := ni()
+	A := nis2d(n, n, 1)
+	q := ni()
+	for i := 0; i < q; i++ {
+		t := ni()
+		x := ni()
+		y := ni()
+		if t == 1 {
+			A[x], A[y] = A[y], A[x]
+		} else if t == 2 {
+			out(A[x][y])
+		}
+	}
 }
 
 // =====================
