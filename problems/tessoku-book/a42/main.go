@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
 	// "container/heap"
 )
@@ -19,6 +20,51 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	n, k := ni(), ni()
+	abes := nis2d(n, 2, 0)
+	sort.Slice(abes, func(i, j int) bool {
+		if abes[i][0] == abes[j][0] {
+			return abes[i][1] < abes[j][1]
+		}
+		return abes[i][0] < abes[j][0]
+	})
+	if n == 1 {
+		out(1)
+		return
+	}
+
+	l := 0
+	r := 0
+	ans := 0
+	for l < n {
+		// rの位置を進める
+		for r < n-1 && abes[l][0]+k >= abes[r+1][0] {
+			r++
+		}
+
+		// Bの個数を数える
+		bcnt := make([]int, 101)
+		for i := l; i <= r; i++ {
+			bcnt[abes[i][1]]++
+		}
+
+		// k個のBの個数が最大になるようにスライド
+		tmpMax := 0
+		for i := 1; i <= 100-k; i++ {
+			sum := 0
+			for j := i; j <= i+k; j++ {
+				sum += bcnt[j]
+			}
+			tmpMax = max(tmpMax, sum)
+		}
+
+		ans = max(ans, tmpMax)
+
+		// lの位置を進める
+		l++
+	}
+
+	out(ans)
 }
 
 // =====================
