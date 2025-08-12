@@ -1,5 +1,5 @@
 {
-  "name": "AtCoder golang Environment",
+  "name": "AtCoder Environment",
   "build": {
     "dockerfile": "Dockerfile"
   },

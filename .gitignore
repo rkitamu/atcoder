@@ -31,3 +31,7 @@ __pycache__/
 tests/
 contest.acc.json
 .sample/
+
+# C# build outputs
+bin/
+obj/
