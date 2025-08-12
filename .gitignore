@@ -27,11 +27,6 @@ yarn-error.log*
 __pycache__/
 *.pyc
 
-# online-judge-tools config
-tests/
-contest.acc.json
-.sample/
-
 # C# build outputs
 bin/
 obj/
