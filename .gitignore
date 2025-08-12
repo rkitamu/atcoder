@@ -6,22 +6,6 @@
 .DS_Store
 Thumbs.db
 
-# Go build outputs
-*.out
-**/actual/
-**/diffs/
-
-# VS Code extension build artifacts
-case-runner/out/
-case-runner/dist/*
-case-runner/node_modules/
-case-runner/*.vsix
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
 # Python venvs (if used)
 .venv/
 __pycache__/
