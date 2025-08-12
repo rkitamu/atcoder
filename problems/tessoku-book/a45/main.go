@@ -19,6 +19,38 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	N := ni()
+	C := ns()
+	A := ns()
+	score := 0
+	for i := 0; i < N; i++ {
+		if A[i] == 'W' {
+			score += 0
+		} else if A[i] == 'R' {
+			score += 1
+		} else if A[i] == 'B' {
+			score += 2
+		}
+	}
+	able := false
+	if C == "W" {
+		if score%3 == 0 {
+			able = true
+		}
+	} else if C == "R" {
+		if score%3 == 1 {
+			able = true
+		}
+	} else if C == "B" {
+		if score%3 == 2 {
+			able = true
+		}
+	}
+	if able {
+		out("Yes")
+	} else {
+		out("No")
+	}
 }
 
 // =====================

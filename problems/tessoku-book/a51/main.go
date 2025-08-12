@@ -19,6 +19,18 @@ const MOD = 1000000007
 
 func main() {
 	defer flush()
+	Q := ni()
+	st := NewStack[string](100000)
+	for z := 0; z < Q; z++ {
+		t := ni()
+		if t == 1 {
+			st.Push(ns())
+		} else if t == 2 {
+			out(st.Top())
+		} else {
+			st.Pop()
+		}
+	}
 }
 
 // =====================
