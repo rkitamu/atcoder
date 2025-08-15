@@ -13,11 +13,11 @@ class Program
     private static double Rd() => StdReader.ReadSingle<double>();
     private static string Rs() => StdReader.ReadSingle<string>();
     private static char Rc() => StdReader.ReadSingle<char>();
-    private static int[] Ris() => StdReader.ReadMultiple<int>();
-    private static long[] Rls() => StdReader.ReadMultiple<long>();
-    private static double[] Rds() => StdReader.ReadMultiple<double>();
-    private static string[] Rss() => StdReader.ReadMultiple<string>();
-    private static char[] Rcs() => StdReader.ReadMultiple<char>();
+    private static int[] Ris(int offset = 0) => StdReader.ReadMultiple<int>(offset);
+    private static long[] Rls(int offset = 0) => StdReader.ReadMultiple<long>(offset);
+    private static double[] Rds(int offset = 0) => StdReader.ReadMultiple<double>(offset);
+    private static string[] Rss(int offset = 0) => StdReader.ReadMultiple<string>(offset);
+    private static char[] Rcs(int offset = 0) => StdReader.ReadMultiple<char>(offset);
     private static char[][] RGrid(int h, int w, int offset = 0) => StdReader.ReadGrid(h, w, offset);
     private static T[][] RMatrix<T>(int h, int w, int offset = 0) => StdReader.ReadMatrix<T>(h, w, offset);
     // {W = Write}{i = int}[s = T[][]]
@@ -25,6 +25,7 @@ class Program
     private static void WNo() => StdWriter.No();
     private static void Wl<T>(T value) => StdWriter.PrintLine(value);
     private static void Wl(double value, int digits) => StdWriter.PrintLine(value, digits);
+    private static void Wl<T>(T[] a) => StdWriter.PrintLine(a);
     private static void Wl(double[] a, int digits) => StdWriter.PrintLine(a, digits);
     private static void Wls<T>(T[][] mat) => StdWriter.PrintLines(mat);
     private static void Wls(double[][] mat, int digits) => StdWriter.PrintLines(mat, digits);
@@ -62,13 +63,14 @@ public static class StdReader
     /// </summary>
     /// <typeparam name="T">string, int, long, double, char のみ対応。</typeparam>
     /// <exception cref="InvalidOperationException">入力が尽きた。</exception>
-    public static T[] ReadMultiple<T>()
+    public static T[] ReadMultiple<T>(int offset = 0)
     {
-        var line = ReadLineOrThrow();
-        var parts = line.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
-        var result = new T[parts.Length];
+        if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
+
+        var parts = ReadLineOrThrow().Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+        var result = new T[offset + parts.Length];
         for (int i = 0; i < parts.Length; i++)
-            result[i] = Converter<T>.Parse(parts[i]);
+            result[offset + i] = Converter<T>.Parse(parts[i]);
         return result;
     }
 
