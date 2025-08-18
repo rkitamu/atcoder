@@ -6,7 +6,7 @@ AtCoder workspace.  This repository provides a preconfigured environment for par
 
 This workspace currently supports:
 
-- Go (default)
+- Go (default) - includes common AtCoder libraries (container/heap, container/list, math/big, regexp, sort, strings)
 - C#
 
 ## ⚙️ Setup
