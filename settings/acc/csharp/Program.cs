@@ -26,6 +26,8 @@ class Program
     private static void Wl<T>(T value) => StdWriter.PrintLine(value);
     private static void Wl(double value, int digits) => StdWriter.PrintLine(value, digits);
     private static void Wl<T>(T[] a) => StdWriter.PrintLine(a);
+    private static void Wl<T>(List<T> list) => StdWriter.PrintLine(list);
+    private static void Wl<T>(IEnumerable<T> enumerable) => StdWriter.PrintLine(enumerable);
     private static void Wl(double[] a, int digits) => StdWriter.PrintLine(a, digits);
     private static void Wls<T>(T[][] mat) => StdWriter.PrintLines(mat);
     private static void Wls(double[][] mat, int digits) => StdWriter.PrintLines(mat, digits);
@@ -265,6 +267,30 @@ public static class StdWriter
         {
             if (i > 0) _writer.Write(' ');
             WriteOne(a[i]);
+        }
+        _writer.Write('\n');
+    }
+
+    /// <summary>List を空白区切りで出力（改行付き）。</summary>
+    public static void PrintLine<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (i > 0) _writer.Write(' ');
+            WriteOne(list[i]);
+        }
+        _writer.Write('\n');
+    }
+
+    /// <summary>IEnumerable を空白区切りで出力（改行付き）。</summary>
+    public static void PrintLine<T>(IEnumerable<T> enumerable)
+    {
+        bool first = true;
+        foreach (var item in enumerable)
+        {
+            if (!first) _writer.Write(' ');
+            WriteOne(item);
+            first = false;
         }
         _writer.Write('\n');
     }
